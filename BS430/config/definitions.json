@@ -15,6 +15,8 @@
 	"Uric Acid":   "UA" ,
 	"Glucose (GOD-POD Method)": "GLU-G",
 	"a-Amylase":   "A-AMY" ,
+	"Bilirubin Total (VOX Method)": "TBIL-DSA",
+	"Bilirubin Total (VOX Method)": "DBIL-DSA",
 	"4":   "CK" ,
 	"5":   "a-HBDH" ,
 	"6":   "CK-MB" ,
