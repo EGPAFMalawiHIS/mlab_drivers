@@ -12,6 +12,11 @@ const parameterRegexMap = regex.parameterRegexMap;
 const ACK = '\x06';
 const genericMappings = {};
 
+const PORT = settings.bs430ServicePort;
+const PASSWORD = settings.iblisPassword;
+const USERNAME = settings.iblisUsername;
+const BASE_URL = settings.iblsBaseURL;
+
 
 function handleData(data) {
     const buffer = Buffer.from(data, 'utf8');
