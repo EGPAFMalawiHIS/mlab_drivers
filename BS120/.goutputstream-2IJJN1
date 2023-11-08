@@ -1,0 +1,210 @@
+﻿process.chdir(__dirname);
+
+var express = require("express");
+var app = express();
+var portfinder = require("portfinder");
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
+var chokidar = require('chokidar');
+var __path__ = require('path');
+var fs = require('fs');
+var byline = require('byline');
+var ip = require("ip");
+const notifier = require('node-notifier');
+var client = require('node-rest-client').Client;
+var async = require('async');
+
+var settings = require(__path__.resolve('.', 'config', 'settings'));
+var mapping = require(__path__.resolve('.', 'config','mapping'));
+var map = require(__path__.resolve('.', 'config', 'definitions'));
+
+var target = settings.targetFolder;
+var deleteWhenDone = settings.deleteWhenDone;
+var options_auth = {user: settings.lisUser, password: settings.lisPassword};
+var urls = [];
+var watcher = chokidar.watch(target, {ignored: /[\/\\]\./, persistent: true});
+
+
+var sampleLocation = ["Sample#-1", "ID", "PatientID"];
+var sampleidMap = {}; 
+
+function sendData(urls){
+		var url = urls[0];
+		urls.shift();
+	
+		(new client(options_auth)).get(url, function (data) {
+
+			if(urls.length > 0){
+				sendData(urls);
+			}
+    });
+}
+
+function showMsg(title, msg, wait, callback) {
+	console.log("OK")
+
+    //notifier.notify({
+      //  title: title,
+        //message: msg,
+        //icon: __path__.resolve('.', 'images', 'mindray.jpg'),
+        //wait: (wait ? wait : false) // Wait with callback, until user action is take
+        //against notification
+    //}, function (err, response) {
+
+        // Response is response from notification
+      //  if(callback && response) {
+
+        //    callback();
+
+        //}
+
+//    });
+}
+
+watcher.on('add', function(path) {
+
+    setTimeout(function(){
+
+        var root = path.substring(target.length);
+        var links = [];
+
+        if(root) {
+
+            var filename = root;
+
+            var mode = ''; 
+            var id_pos = null, name_pos = null;
+            var test_pos = null, sample_pos = null, result_pos;
+						var barcode_pos = null;
+						var sample_id_pos = null; test_pos;
+				
+
+            console.log("New file added " + path);
+
+            showMsg("New File", "New file added " + path);
+
+            var stream = byline(fs.createReadStream(path, { encoding: 'utf8' }));
+
+
+            stream.on('data', function(line) {
+
+                var  sections = line.split(',');
+
+				if (line && line.match(sampleLocation[0])){
+						mode = "SAMPLE"
+				}else if (line && line.match('TestDetail#3')){
+                    mode = "RESULT";
+                }else if (sections[0].match(/\#/)){
+                    mode = '';
+                }
+							
+				if (mode == "SAMPLE" && sections.length > 5){
+					if(sample_id_pos  == null){
+                        sample_id_pos = sections.indexOf(sampleLocation[1]) >= 0 ? sections.indexOf(sampleLocation[1]) : sample_id_pos;
+                        barcode_pos = sections.indexOf("Entry") >= 0 ? sections.indexOf("Entry") : sample_id_pos;
+                       
+					}else{
+						var date = sections[1].split(" ")[0];
+						var key = date + "_" + sections[sample_id_pos];
+						sampleidMap[key] = sections[barcode_pos];
+					}
+				}
+                
+                console.log(sampleidMap);
+                console.log("checking data");
+                if(mode == 'RESULT' && sections.length > 5){ 
+				
+					console.log(sampleidMap);
+				
+                    if ((test_pos == null)) {
+                        test_pos = sections.indexOf('ItemID') >= 0 ? sections.indexOf('ItemID') : test_pos;
+                        sample_pos = sections.indexOf('SampleID') >= 0 ? sections.indexOf('SampleID') : sample_pos;
+                        result_pos = sections.indexOf('TestResult') >= 0 ? sections.indexOf('TestResult') : result_pos;
+                    }else if (sections[test_pos] && map[sections[test_pos]]){
+                        try {
+                            if (map[sections[test_pos]] && mapping[map[sections[test_pos]].toUpperCase()]) {
+                                var measure_name = mapping[map[sections[test_pos]].toUpperCase()];
+                            } else {
+                                var measure_name = map[sections[test_pos]].toUpperCase();
+                            }
+                        }catch(e){
+                            measure_name = '-1';
+                        }
+						
+						var sample_id;
+						if (sections[sample_pos]){
+							var date = sections[1].split(" ")[0];
+							var key = date + "_" + sections[sample_pos];
+							sample_id = sampleidMap[key];
+						}
+						
+                        var result = sections[result_pos];
+
+                        try {
+                            if(parseInt(result) < 0) {
+                                result = '';
+                            }else{
+				        result = (parseFloat(result)).toFixed(2);
+			    }
+                        }catch(e){
+                            console.log("Failed for: " + measure_name);
+                        }                        
+						
+                        if(sample_id && map[sections[test_pos]])	{
+                            var link = settings.lisPath
+                            .replace(/\#\{SPECIMEN_ID\}/, sample_id)
+                            .replace(/\#\{MEASURE_ID\}/, measure_name)
+                            .replace(/\#\{RESULT\}/, result);	
+                                    urls.push(link);
+                            }else if (!sample_id){
+							}
+
+                            sample_id = "";
+                            result = "";
+                            measure_name = "";
+
+                    }
+                }
+
+            });
+
+            stream.on('end', function() {
+								if(urls.length > 0){ 
+									console.log(urls);
+									sendData(urls);
+									urls = [];
+								}else{
+									console.log("No result sent to BLIS!!")
+								}	
+
+                showMsg("Success!", "Finished sending results for file " + path);
+
+                if(deleteWhenDone) {
+
+                    fs.unlinkSync(path);
+
+                }
+
+            })
+
+        }
+
+    }, 2000);
+})
+
+
+portfinder.basePort = settings.hostPort;
+
+portfinder.getPort(function (err, port) {
+
+    server.listen(port, function () {
+
+        console.log("✔ Server running on port %d in %s mode", port, app.get("env"));
+
+        showMsg("Server Status", "✔ Server running on port " + port + " in " + app.get("env") + " mode");
+
+    });
+
+});
+
+module.exports = server;

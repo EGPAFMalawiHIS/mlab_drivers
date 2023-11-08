@@ -1,0 +1,9 @@
+{
+	"protocol": "http",
+	"host": "10.43.68.2",
+	"port": "8001",
+	"username": "administrator",
+	"password": "rudolf",
+	"path": "/api/update_result.php",
+	"machineName": "mindray-BC3000"
+}
