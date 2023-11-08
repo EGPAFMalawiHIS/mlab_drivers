@@ -40,18 +40,18 @@ function getResult(l, f){
 	var block = l.substr(cur_pos, (bare_f.length + 1));
 	var block_val = l.substr(cur_pos, f.length);
 	cur_pos += bare_f.length + 1;
-	
+
 	var signs = {
 			"0": "",
 			"1": "+",
 			"2": "-",
 			"4": "*"
 		};
-	
+
 	var sign = signs[block.substr((block.length - 1), 1)];
 	var value = "";
 	if (f.match(/\./)){
-		
+
 		var left = f.split(/\./)[0].length;
 		var right = f.split(/\./)[1].length;
 
@@ -68,98 +68,13 @@ var server = net.createServer(function(socket) {
 
 	socket.setNoDelay(true);
 	socket.on('data', function(data) {
-			
-			var line = String(data);		
-			line = line.replace(/^\x02/, "");
-			line = line.replace(/\x03$/, "");
-			console.log(line);	
-					
-			if (line.match(/^D1U/)){
-				return;
-			}			
 
-			if (line.match(/^R1000/)){
-				//Send Response
-				//console.log(data);
-				//console.log("IP:: " + socket.remoteAddress);
-				//console.log("Port:: " + socket.remotePort);
-				
-				//socket.write("STX");
-				//socket.write("ETX");
-				//socket.write("EOT");
-				//socket.write(new Buffer([2]));
-				return;
-			}	
-			
-			urls = [];
-			var specimen_id = line.substr(44, 10);
-			console.log(specimen_id);
-			cur_pos = (44 + 10); //10 for length of specimen id
+			var line = String(data);
+			console.log(line)
+			// line = line.replace(/^\x02/, "");
+			// line = line.replace(/\x03$/, "");
 
-			var format = [
-				["WBC", "***.**"],
-				['RBC', '**.**'],
-				['HGB', '***.*'],
-				['HCT', '***.*'],
-				['MCV', '***.*'],
-				['MCH', '***.*'],
-				['MCHC', '***.*'],
-				['PLT', '****'],
-				['LYMPH%', '***.*'],
-				['MONO%', '***.*'],
-				['NEUT%', '***.*'],
-				['EO%', '***.*'],
-				['BASO%', '***.*'],
-				['LYMPH#', '***.**'],
-				['MONO#', '***.**'],
-				['NEUT#', '***.**'],
-				['EO#', '***.**'],
-				['BASO#', '***.**'],
-				['RDW-CV', '***.*'],
-				['RDW-SD', '***.*'],
-				['PDW', '***.*'],
-				['MPV', '***.*'],
-				['P-LCR', '***.*'],
-				['RET%', '**.**'],	
-				['RET#', '.****'],
-				['IRF', '***.*'],
-				['LFR', '***.*'],
-				['MFR', '***.*'],
-				['HFR', '***.*'],
-				['PCT', '**.**'],
-				['NRBC%', '****.*'],
-				['NRBC#', '***.**'],
-				['IG#', '***.**'],
-				['IG%', '***.*'],
-				['blank', '*****'],
-				['RET-He', '***.*']
-			]
-		
-
-		var link = settings.lisPath;
-		link = link.replace(/\#\{SPECIMEN_ID\}/, specimen_id);
-
-		for(var i = 0; i < format.length; i++){
-			
-			var parameter = format[i][0].toUpperCase().trim();	
-			var result = getResult(line, format[i][1]);
-			console.log(format[i][0] + "   : " + result);
-
-			var measure_id = mapping[parameter];
-
-			var uri = link.replace(/\#\{MEASURE_ID\}/, measure_id);
-			uri = uri.replace(/\#\{RESULT\}/, result);
-			if(measure_id != undefined){
-				urls.push(uri);
-			}
-		}
-		
-		console.log("Sending Data to Server")
-
-		sendData(urls);
-		urls = [];
-		line = "";		
 	});
 });
 
-server.listen(1234, '10.40.2.10')
+server.listen(1234, '10.40.3.131')
