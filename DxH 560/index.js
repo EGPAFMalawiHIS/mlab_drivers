@@ -1,9 +1,11 @@
 const net = require('net');
 const path = require('path');
+const client = require('node-rest-client').Client;
 
 var config = require(path.resolve(".", "config", "DxH 560.json"));
 var settings = require(path.resolve(".", "config", "settings.json"));
-var client = require('node-rest-client').Client;
+
+
 const regex = require('./helpers/regex');
 const format = require('./helpers/format');
 
@@ -50,7 +52,7 @@ function sendData(urls) {
     console.log("** sending data to server **")
     var url = urls[0];
     urls.shift();
-    (new client(credentials)).get(url, function (_data) {
+    (new client(credentials)).get(url, function(){
         if (urls.length > 0) {
             sendData(urls);
         }
