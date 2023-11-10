@@ -2,6 +2,8 @@ const net = require('net');
 const path = require('path');
 
 var config = require(path.resolve(".", "config", "DxH 560.json"));
+var settings = require(path.resolve(".", "config", "settings.json"));
+var client = require('node-rest-client').Client;
 const regex = require('./helpers/regex');
 const format = require('./helpers/format');
 
@@ -12,11 +14,7 @@ const parameterRegexMap = regex.parameterRegexMap;
 const ACK = '\x06';
 const genericMappings = {};
 
-const PORT = settings.bs430ServicePort;
-const PASSWORD = settings.iblisPassword;
-const USERNAME = settings.iblisUsername;
-const BASE_URL = settings.iblsBaseURL;
-
+var ACCESSION_NUMBER = "";
 
 function handleData(data) {
     const buffer = Buffer.from(data, 'utf8');
@@ -29,9 +27,11 @@ function handleData(data) {
                 genericMappings[key] = parseFloat(match[1]);
             }
         }
+        const match = message.match(/\|(\d+)!\|/);
+        if (match) {
+            ACCESSION_NUMBER = match[1];
+        }
     });
-
-    console.log(messages.toString());
 
     const result = format.format.map(item => {
         const key = Object.keys(item)[0];
@@ -41,8 +41,39 @@ function handleData(data) {
     eventEmitter.emit('dataProcessed', result);
 };
 
+var credentials = {
+    username: settings.username,
+    password: settings.password
+};
+
+function sendData(urls) {
+    console.log("** sending data to server **")
+    var url = urls[0];
+    urls.shift();
+    (new client(credentials)).get(url, function (_data) {
+        if (urls.length > 0) {
+            sendData(urls);
+        }
+    });
+}
+
 eventEmitter.on('dataProcessed', (result) => {
-    // console.log('Data processing finished. Result:', result);
+    var urls = new Array();
+    result.forEach((result) => {
+
+        const key = Object.keys(result);
+        const value = Object.values(result);
+
+        var url = settings.protocol + "://" +
+        config.host + ":" + config.port + config.path +
+        "?specimen_id=" + encodeURIComponent(ACCESSION_NUMBER) +
+        "&measure_id=" + encodeURIComponent(key) +
+        "&result=" + encodeURIComponent(value) +
+        "&machine_name=" + encodeURIComponent(config.machineName);
+
+        urls.push(url);
+    });
+    sendData(urls)
 });
 
 const server = net.createServer((socket) => {

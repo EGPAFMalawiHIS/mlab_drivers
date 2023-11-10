@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "net": "^1.0.2",
-    "node-astm": "0.0.3"
+    "node-astm": "0.0.3",
+    "node-rest-client": "^3.1.1"
   }
 }
