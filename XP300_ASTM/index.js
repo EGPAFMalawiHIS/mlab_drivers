@@ -2,7 +2,7 @@ const net = require('net');
 const path = require('path');
 const client = require('node-rest-client').Client;
 
-var config = require(path.resolve(".", "config", "DxH 560.json"));
+var config = require(path.resolve(".", "config", "machine_settings.json"));
 var settings = require(path.resolve(".", "config", "settings.json"));
 
 
