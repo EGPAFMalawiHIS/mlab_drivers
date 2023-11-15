@@ -1,19 +1,14 @@
 const net = require("net");
 const path = require("path");
-const client = require("node-rest-client").Client;
+const axios = require("axios");
 
-var config = require(path.resolve(".", "config", "machine_settings.json"));
-var settings = require(path.resolve(".", "config", "iblis_settings.json"));
-var fbcParameters = require(path.resolve(".", "config", "fbcparams.json"));
+var config = require(path.resolve(".", "config", "xp300.json"));
+var settings = require(path.resolve(".", "config", "settings.json"));
+var fbcParameters = require(path.resolve(".", "config", "parameters.json"));
 var mapping = require(path.resolve(".", "config", "mapping.json"));
-
-const regex = require("./helpers/regex");
-const format = require("./helpers/format");
 
 const EventEmitter = require("events");
 const eventEmitter = new EventEmitter();
-
-const parameterRegexMap = regex.parameterRegexMap;
 const ACK = "\x06";
 const genericMappings = {};
 var ACCESSION_NUMBER = "";
