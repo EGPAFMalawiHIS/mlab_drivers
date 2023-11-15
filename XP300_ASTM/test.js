@@ -36,10 +36,6 @@ data[0]
       let [, parameter, value] = match;
       parameter = parameter;
       param = fbcParameters[parameter];
-      // console.log("Parameter:", parameter);
-      // console.log("Mapped Parameter:", param);
-      // console.log("Value:", value);
-      // console.log('Accession Number:', accessionNumber);
       if (param) {
         genericMappings[param] = { id: mapping[param], value: value };
       }
