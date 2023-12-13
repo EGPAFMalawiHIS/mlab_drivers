@@ -1,7 +1,13 @@
-const machineConfig = require('./xl640.json');
+const config = require('./xl640.json');
 const TCPIP = require('./server/tcpip');
 
-if (machineConfig.connection === "TCP/IP") {
+/**
+ * Checks the connection type
+ * from the configuration file
+ * and starts TCP/IP communication
+ * if it's specified.
+ */
+if (config.connection.toLowerCase() === "tcp/ip") {
     const tcpipInstance = new TCPIP();
     tcpipInstance.start();
 }

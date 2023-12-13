@@ -1,27 +1,57 @@
 const regex = require('../helpers/regex');
+const mappings = require('../helpers/mapping.json');
 const parameterRegexMap = regex.parameterRegexMap;
-const ACCESSION_NUMBER = '';
+const settings = require('../config/lis.json');
 
-class Handler {
+const AxiosInstance = require('../server/axios');
+
+var ACCESSION_NUMBER = '';
+var urls = new Array();
+
+/**
+ * @class Handler
+ * @extends AxiosInstance
+ * @constructor bufferData
+ */
+class Handler extends AxiosInstance {
+
     constructor(data) {
         this.data = data;
     };
 
+    /**
+     * @method proccessData gets buffer data to readable format
+     * @params null
+     * @returns null
+     */
     processData() {
-        let f = [ '\u00021H|`^&||||||||||P|E 1394-97|20231213084551\rP|1|0|||MERCY CHADZA|||F||||||||0|0\rO|1|2300669053||^^^CRE|||||||||||SERUM\rR|1|^^^CRE|0.64|mg/dl|^DEFAULT|N|N|F||||20231213084529\rC|1|I|Instrument Flag N\rL|1|N\r\u00032C',
-                7|XL640    |   '' ]
-        const buffer = Buffer.from(f, 'utf8');
-        const messages = buffer.toString('utf8').split('\r\n').map(message => message.trim());
-        messages.forEach((message) => {
-            const match = message.match(/\|(\d+)!\|/);
+        const buffer = Buffer.from(data, 'utf8');
+        const messages = buffer.toString('utf8').split('\r').map(message => message.trim());
+        messages.forEach((data) => {
+            const match = data.match(/(?<=O\|1\|)([0-9]+)(?=\|)/g);
             if (match) {
-                ACCESSION_NUMBER = match[1];
+                console.log("accession number: ", match[0])
+                ACCESSION_NUMBER = match[0]
             }
             for (const key of Object.keys(parameterRegexMap)) {
                 const regex = parameterRegexMap[key];
-                const match = message.match(regex);
+                const match = data.match(regex);
                 if (match) {
-                    console.log(match)
+                    console.log(`${key}: `, match[1])
+                    if (ACCESSION_NUMBER) {
+                        const value = mappings.mapping[`${key}`];
+                        var url = settings.protocol + "://" +
+                            settings.host + ":" + settings.port + settings.path +
+                            "?specimen_id=" + encodeURIComponent(ACCESSION_NUMBER) +
+                            "&measure_id=" + encodeURIComponent(value) +
+                            "&result=" + encodeURIComponent(parseFloat(match[1])) +
+                            "&machine_name=" + encodeURIComponent(config.machineName);
+                        urls.push(url)
+                        /**
+                         * invoke axios instance method
+                         */
+                        this.sendData(urls)
+                    }
                 }
             }
         });
