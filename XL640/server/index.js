@@ -17,7 +17,7 @@ class Server {
      * @method start starts node server
      * @param {*} config
      */
-    start(config) {
+    serve(config) {
         this.server.listen(config.port, config.ipAddress, () => {
             console.log(`Started server on ${config.ipAddress}`);
         });

@@ -19,14 +19,17 @@ function processData(data, socket) {
  * @class TCPIP handles tcp/ip connections
  * @extends Server class
  */
-class TCPIP extends Server(processData) {
+class TCPIP extends Server{
+    constructor() {
+        super(processData);
+    }
     /**
      * @method start starts the node server
      * @params null
      * @returns null
      */
     start() {
-        this.server.start({
+        this.serve({
             ipAddress: networkConfig.host,
             port: networkConfig.port
         });
