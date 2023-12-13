@@ -1,0 +1,16 @@
+{
+  "name": "xl640",
+  "version": "1.0.0",
+  "description": "Machine Driver for Elber XL 640 Biochemistry Machine",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "EGPAF",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "net": "^1.0.2",
+    "path": "^0.12.7"
+  }
+}

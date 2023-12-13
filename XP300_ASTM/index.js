@@ -40,12 +40,16 @@ function sendData(urls) {
 
 function handleData(data) {
     const buffer = Buffer.from(data, 'utf8');
-    const messages = buffer.toString('utf8').split('\r\n').map(message => message.trim());
-    const accRegex = /(\d+)\^A\|/;
-    const [,accessionNumber] = messages[0].match(accRegex);
-    ACCESSION_NUMBER = accessionNumber
-    const regex = /\|\^\^\^\^(\w+.*?)\^1\|[\s]*([\d.]+)/;
-    messages[0]
+    const messages = buffer.toString('utf8').split('\r\n').map(message => message.trim() );
+    console.log(messages)
+    messages.forEach((message) => {
+        const accRegex = /(\d+)\^([A-Z])\|/;
+        const match = message.toString().match(accRegex)
+        if(match){
+            ACCESSION_NUMBER = match[1]
+        }
+        const regex = /\|\^\^\^\^(\w+.?)\^1\|[\s]([\d.]+)/;
+        message
         .toString()
         .split(/R\|\d+/)
         .forEach((str) => {
@@ -59,6 +63,7 @@ function handleData(data) {
                 }
             }
         });
+    })
     urls = generateUrls(genericMappings)
     sendData(urls)
 };
