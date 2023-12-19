@@ -37,16 +37,16 @@ class HttpFactory extends Handler {
             });
 
             socket.on('error', (err) => {
-                console.log(`error in connection: ${err.message}`);
+                throw new Error(`error in connection: ${err.message}`);
             });
         });
 
         server.on('close', () => {
-            console.log('Server is closed.');
+            console.log('server is closed.');
         });
 
         server.on('error', (err) => {
-            console.log(`Server error: ${err.message}`);
+            throw new Error(`server error: ${err.message}`);
         });
     }
 
