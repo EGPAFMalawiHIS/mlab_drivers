@@ -13,7 +13,7 @@ class Sync extends AxiosInstance {
                 if (urls.length > 0) {
                     start(urls);
                 }
-                console.log(`${url} - ${response.status}`)
+                console.log(`\x1b[32m✨️ Success: ${url} - ${response.message}\x1b[0m`);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

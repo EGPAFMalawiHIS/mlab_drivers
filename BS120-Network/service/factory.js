@@ -1,6 +1,5 @@
 const Net = require('net');
 const Handler = require('../handlers/handler');
-const Sync = require('../sync/sync');
 const ACK = '\x06'
 
 class HttpFactory extends Handler {
