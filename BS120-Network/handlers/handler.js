@@ -1,4 +1,5 @@
 const Sync = require("../service/sync");
+const fs = require("fs")
 
 class Handler extends Sync {
     static getInstance() {
@@ -8,9 +9,15 @@ class Handler extends Sync {
         return Handler.instance;
     }
 
-    process(data) {
+    async process(data) {
         console.log(data)
-        this.transmit(data)
+        fs.writeFileSync('data.txt', data, (err) => {
+            if (err) {
+                console.error("could not save data to the file: ", err);
+                return;
+            }
+            console.log('data saved to file');
+        });
     }
 }
 
