@@ -1,16 +1,15 @@
 {
-  "name": "xl640",
+  "name": "bc120-network",
   "version": "1.0.0",
-  "description": "Machine Driver for Elber XL 640 Biochemistry Machine",
-  "main": "index.js",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "test": "test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "EGPAF",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.10.0",
-    "net": "^1.0.2",
-    "path": "^0.12.7"
+    "axios": "^1.6.2",
+    "net": "^1.0.2"
   }
 }
