@@ -9,5 +9,8 @@
   "sourceMap": true,
   "strict": true,
   "esModuleInterop": true,
-  }
+  },
+  "include": [
+    "src/**/*.ts" // Adjust this path based on your project structure
+  ],
 }
