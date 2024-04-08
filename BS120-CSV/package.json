@@ -1,0 +1,20 @@
+{
+  "name": "bs120-csv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "csvtojson": "^2.0.10",
+    "events": "^3.3.0",
+    "node-rest-client": "^3.1.1",
+    "nodemon": "^3.1.0"
+  }
+}
