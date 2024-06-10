@@ -21,7 +21,6 @@ function sendData(urls) {
   url = url.replace("---", "%2B");
   urls.shift();
   new client(options_auth).get(url, function (data) {
-    console.log(data.toString());
     if (urls.length > 0) {
       sendData(urls);
     }
