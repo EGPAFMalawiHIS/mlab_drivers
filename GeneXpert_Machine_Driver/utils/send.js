@@ -10,10 +10,10 @@ var options_auth = {
 var lisPath = settings.lisPath;
 
 function buildUrl(sampleId, meausureId, result, machineName) {
-  lisPath = lisPath.replace(/\#\{SPECIMEN_ID\}/, sampleId);
-  let uri = lisPath.replace(/\#\{MEASURE_ID\}/, meausureId);
-  uri = uri.replace(/\#\{RESULT\}/, result);
-  return uri;
+  let lisPathUrl = lisPath.replace(/\#\{SPECIMEN_ID\}/, sampleId);
+  let uri = lisPathUrl.replace(/\#\{MEASURE_ID\}/, meausureId);
+  let finalUri = uri.replace(/\#\{RESULT\}/, result);
+  return finalUri;
 }
 
 function sendData(urls) {

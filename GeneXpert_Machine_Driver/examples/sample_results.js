@@ -2,7 +2,7 @@ var MTBXDR = [
   "1H|@^\\|GXM-18500062131||QUEEN ELIZABETH CENTRAL HOSPITAL^GeneXpert^6.4|||||192.168.100.200||P|1394-97|20240604095811",
   "P|1|||QE1308 John DDoe|^^^^|||||||||||||||||||||||||||||",
   "O|1|12000451334|Cepheid-2F32198-G6YFQU8TBA-06|^^^MTB-XDR|R|202405231022929|||||||||ORH||||||||||F",
-  "R|1|^MTB-XDR^^INVALID^Xpert MTB-XDR^1^INVALID^|^|||||F||Kapusi Kena|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
+  "R|1|^MTB-XDR^^INVALID^Xpert MTB-XDR^1^INVALID^|^|||||F||Test Test|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
   "C|1|I|Error^2123^Communication Lost^Code 21323: Module D2 lost communication while test was running, attempting recovery^20240523114642|N",
   "C|2|I|Error^2124^Communication Restored^Code 2124: Module D2 communication restored^20240523114736|N",
   "R|2|^MTB-XDR^^INVALID^^^SPC-ahpC^|NA^|||",
@@ -37,7 +37,7 @@ var MTBXDR = [
   "R|31|^MT1B-XDR^^INVALID^^^eis^EndPt|^103.0|||",
   "R|32|^MTB-XDR^^INVALID^^^inhA-melt^Tm|^76.2|||",
   "R|33|^MTB-XDR^^INVALID^^^inhA-melt^PkHgt|^199.3|||",
-  "R|34|^MTB-XDR^^MTB^Xpert MTB-XDR^1^MTB^|DETECTED^|||||F||Kapusi Kena|20240523102929|202405231157255|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
+  "R|34|^MTB-XDR^^MTB^Xpert MTB-XDR^1^MTB^|DETECTED^|||||F||Test Test|20240523102929|202405231157255|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
   "C|1|I|Error^2123^Communication Lost^Code 2123: Module D2 lost communication while test was running, attempting recovery^20240523114642|N",
   "C|2|I|Error^2124^Communication Restore3d^Code 2124: Module D2 communication restored^20240523114736|N",
   "R|35|^MTB-XDR^^MTB^^^inhA-melt^Tm|^76.2|||",
@@ -53,7 +53,7 @@ var MTBXDR = [
   "R|43|^MTB-XDR^^LINH Resistance^^^fabG1-melt^PkHgt|^209.0|||",
   "R|44|^MTB-XDR^^LINH Resistance^^^ahpC7-melt^Tm|^68.5|||",
   "R|45|^MTB-XDR^^LINH Resistance^^^ahpC-melt^PkHgt|^40.4|||",
-  "R|46|^MTB-XDR^^INH Resistance^Xpert MTB-XDR^1^INH Resistance^|NOT DETECTED^|||||F||Kapusi Kena|20240523102929|20240523115755|Cepheid-2F32198^110016658^2200007365^309047630^02202^20250105|",
+  "R|46|^MTB-XDR^^INH Resistance^Xpert MTB-XDR^1^INH Resistance^|NOT DETECTED^|||||F||Test Test|20240523102929|20240523115755|Cepheid-2F32198^110016658^2200007365^309047630^02202^20250105|",
   "C|1|I|Error^2123^Communication Lost^Code 2123: Module D2 lost communication while test was running, attempting recovery^20240523114642|N",
   "C|2|I|Error^2124^Communication Restored^Code 2124: Module D2 communicat1ion restored^20240523114736|N",
   "R|47|^MTB-XDR^^INH Resistance^^^inhA-melt^Tm|^76.2|||",
@@ -64,7 +64,7 @@ var MTBXDR = [
   "R|52|^MTB-XDR^^INH Resistance^^^fabG1-melt^PkHgt|^209.0|||",
   "R|53|^MTB-XDR^^INH Resistance^^^ahpC-melt^Tm|^68.5|||",
   "R|54|^MTB-XDR^^INH Resistance^^^ahpC-melt^PkHgt|^40.4|||",
-  "R|355|^MTB-XDR^^LFLQ Resistance^Xpert MTB-XDR^1^Low FLQ Resistance^|^|||||F||Kapusi Kena|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
+  "R|355|^MTB-XDR^^LFLQ Resistance^Xpert MTB-XDR^1^Low FLQ Resistance^|^|||||F||Test Test|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
   "C|1|I|Error^2123^Communication Lost^Code 2123: Module4 D2 lost communication while test was running, attempting recovery^20240523114642|N",
   "C|2|I|Error^2124^Communication Restored^Code 2124: Module D2 communication restored^20240523114736|N",
   "R|56|^MTB-XDR^^LFLQ Resistance^^^inhA-melt^Tm|^76.2|||",
@@ -77,7 +77,7 @@ var MTBXDR = [
   "R|63|^MTB-XDR^^LFLQ Resistance^^^gyrA3-melt^PkHgt|^66.5|||",
   "R|64|^MTB-XDR^^LFLQ Resistance^^^gyrB2-melt^Tm|^69.3|||",
   "R|65|^MTB-XDR^^LFLQ 7Resistance^^^gyrB2-melt^PkHgt|^74.6|||",
-  "R|66|^MTB-XDR^^FLQ Resistance^Xpert MTB-XDR^1^FLQ Resistance^|NOT DETECTED^|||||F||Kapusi Kena|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
+  "R|66|^MTB-XDR^^FLQ Resistance^Xpert MTB-XDR^1^FLQ Resistance^|NOT DETECTED^|||||F||Test Test|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
   "C|1|I0|Error^2123^Communication Lost^Code 2123: Module D2 lost communication while test was running, attempting recovery^20240523114642|N",
   "C|2|I|Error^2124^Communication Restored^Code 2124: Module D2 communication restored^20240523114736|N",
   "R|67|^M1TB-XDR^^FLQ Resistance^^^inhA-melt^Tm|^76.2|||",
@@ -96,7 +96,7 @@ var MTBXDR = [
   "R|80|^MTB-XDR^^FLQ Resistance^^^rrs-melt^PkHgt|^162.1|||",
   "R|81|^MTB-XDR^^FLQ Resistance^^^eis-melt^Tm|^68.4|||",
   "R|82|^MTB-XDR^^FLQ Resistance^^^eis-melt^PkHgt|^99.6|||",
-  "R|83|^MTB-XDR^^AMK Resistance^Xpert MTB-XDR^1^AMK Resistance^|NOT DETECTE5D^|||||F||Kapusi Kena|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
+  "R|83|^MTB-XDR^^AMK Resistance^Xpert MTB-XDR^1^AMK Resistance^|NOT DETECTE5D^|||||F||Test Test|20240523102929|20240523115755|Cepheid-2F32198^110016658^220007365^309047630^02202^20250105|",
   "C|1|I|Error^2123^Communication Lost^Code 2123: Module D2 lost communication while test was running, attempting recove6ry^20240523114642|N",
   "C|2|I|Error^2124^Communication Restored^Code 2124: Module D2 communication r",
 ];
@@ -210,6 +210,14 @@ var EID = [
   "R|14|^EID TEST^^QC^^^QC-25^EndPt|^0.0|||",
   "L|1|N",
 ];
+
+MTBRIF = [ '1H|@^\\|GXM-73710828157||QUEEN ELIZABETH CENTRAL HOSPITAL^GeneXpert^6.4|||||10.43.32.4||P|1394-97|20240613114914',
+ 'P|1|||QE 1540 Test Tester|^^^^|||||||||||||||||||||||||||||',
+ 'O|1|2400460590|Cepheid-2F32198-UCJFNJAUBA-02|^^^MTB-RIF_ULTRA|R|220240613093615|||||||||ORH||||||||||F',
+ 'R|1|^MTB-RIF_ULTRA^^MTB^Xpert MTB-RIF Ultra^4^MTB^|NOT DETECTED^|||||F||Test Test|20240613093615|20240613104145|Cepheid-2F32198^809938^672451^627347937^55612^20250504|',
+ 'R|20|^MTB-RIF_ULTRA^^MTB Trace^Xpert MTB-RIF Ultra^4^MTB Trace^|^|||||F||Test Test|20240613093615|20240613104145|Cepheid-2F32198^809938^672451^7627347937^55612^20250504|',
+ 'R|39|^MTB-RIF_ULTRA^^Rif Resistance^Xpert MTB-RIF Ultra^4^RIF Resistance^|^|||||F||Test Test|20240613093615|20240613104145|Cepheid-2F32198^809938^672451^627347937^55612^20250504|' 
+]
 
 module.exports = {
   MTBRIF,

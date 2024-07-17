@@ -106,13 +106,13 @@ function getResultUrls(results, mapping, settingsMachineName, buildUrl) {
       settingsMachineName = result.machineName;
     }
     let measureId = mapping[result.resultTestCode];
+    let sampleId = result.sampleId;
     if (
       result.hostTestCode.toLowerCase() == "mtb-xdr" &&
       result.resultTestCode == "MTB"
     ) {
       measureId = mapping["MTB XDR"];
     }
-    let sampleId = result.sampleId;
     let resultvalue =
       `${result.resultValue} ${result.valueModifier} ${result.minRange}${result.units}`.trim();
     let url = buildUrl(sampleId, measureId, resultvalue, settingsMachineName);
