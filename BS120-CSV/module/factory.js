@@ -34,16 +34,7 @@ class Factory {
         })
         .fromString(this.data.toString())
         .then((csvRow) => {
-            let groupedData = [];
-            groupedData.push(this.jsonify(csvRow).reduce((acc, cur) => {
-                const { accession_number, measure, result } = cur;
-                if (!acc[accession_number]) {
-                    acc[accession_number] = [];
-                }
-                acc[accession_number].push({ measure, result });
-                return acc;
-            }, {}))
-            callback(groupedData)
+            callback(this.jsonify(csvRow))
         })
     }
 }
