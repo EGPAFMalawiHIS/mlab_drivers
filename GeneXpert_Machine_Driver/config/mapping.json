@@ -1,8 +1,18 @@
 {
-"MTB" 		  :	188,
-"Rif Resistance"  :	189,
-"COV-2"   	  :	190,
-"HPV 16"          :     335,
-"HPV 18_45"       :     336,
-"OTHER HR HPV"    :     337
+  "MTB": 202,
+  "Rif Resistance": 203,
+  "COV-2": 190,
+  "HPV 16": 335,
+  "HPV 18_45": 336,
+  "OTHER HR HPV": 337,
+  "Viral Load": 500,
+  "EID": 501,
+  "AMK Resistance": 416,
+  "CAP Resistance": 417,
+  "ETH Resistance": 418,
+  "FLQ Resistance": 419,
+  "INH Resistance": 420,
+  "INVALID": 421,
+  "KAN Resistance": 422,
+  "MTB XDR": 423
 }
