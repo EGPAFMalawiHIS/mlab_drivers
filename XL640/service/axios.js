@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 
 /**
@@ -7,19 +6,24 @@ const axios = require('axios');
  * @method GlobalAxios axios instance
  */
 class AxiosInstance {
-    constructor(baseURL, timeout) {
+    constructor(baseURL, timeout, username, password) {
         this.baseURL = baseURL;
         this.timeout = timeout;
+        this.username = username;
+        this.password = password;
+
+        this.Axios = axios.create({
+            baseURL: this.baseURL,
+            timeout: this.timeout,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            auth: {
+                username: this.username,
+                password: this.password
+            }
+        });
     }
-
-    Axios = axios.create({
-        baseURL: `${this.baseURL}`,
-        timeout: this.timeout,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
 }
-
 
 module.exports = AxiosInstance;

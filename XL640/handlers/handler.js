@@ -1,7 +1,8 @@
 const Sync = require("../service/sync");
+const path = require('path')
 const mappings = require("./../helpers/mapping");
-var config = require(path.resolve(".", "config", "iblis.json"));
-var settings = require(path.resolve(".", "config", "settings.json"));
+var settings = require(path.resolve(".", "config", "iblis.json"));
+// var settings = require(path.resolve(".", "config", "settings.json"));
 
 class Handler extends Sync {
   static getInstance() {
@@ -12,40 +13,42 @@ class Handler extends Sync {
   }
 
   async process(messages) {
-    var ACCESSION_NUMBER = "";
-    var urls = new Array();
+    let urls = new Array();
     messages.forEach((line) => {
-      const accessionNumberRegex = /P\|(\d+)/;
+      let accessionNumber = ''
+      const accessionNumberRegex = /\|0\rO\|1\|([a-zA-Z0-9]+)\^/;
       const accessionNumberMatch = line.match(accessionNumberRegex);
-      if (ACCESSION_NUMBER == "") {
+      if (accessionNumber == "") {
         if (accessionNumberMatch) {
-          ACCESSION_NUMBER = accessionNumberMatch[1];
+          accessionNumber = accessionNumberMatch[1];
         }
       }
-      const match = line.match(regex);
-      if (match) {
-        const [, test, value ] = match;
-        const measureId = mappings.mapping[`${test}`];
-        // console.log(`Test: ${test}, Value: ${value}, Unit: ${unit}`);
-        var url =
-          settings.protocol +
-          "://" +
-          settings.host +
-          ":" +
-          settings.port +
-          settings.path +
-          "?specimen_id=" +
-          encodeURIComponent(ACCESSION_NUMBER) +
-          "&measure_id=" +
-          encodeURIComponent(measureId) +
-          "&result=" +
-          encodeURIComponent(parseFloat(value)) +
-          "&machine_name=" +
-          encodeURIComponent(config.machineName);
-        urls.push(url);
-        this.transmit(urls);
+      let segments = line.split('Instrument Flag').map(part => part.trim())
+      for (const segment of segments) {
+        if(segment.trim() == ''){
+          continue;
+        }
+        const regex = /\|\^\^\^([^|]+)\|([^|]+)\|([^|]+)\|/;
+        const match = segment.match(regex);
+        if (match) {
+          const [, test, value, unit] = match;
+          console.log(`Test: ${test}, Value: ${value}, Unit: ${unit}`);
+          const measureId = mappings.mapping[`${test}`];
+          let url =
+            settings.baseURL +
+            "?specimen_id=" +
+            encodeURIComponent(accessionNumber) +
+            "&measure_id=" +
+            encodeURIComponent(measureId) +
+            "&result=" +
+            encodeURIComponent(parseFloat(value)) +
+            "&machine_name=" +
+            encodeURIComponent(settings.machineName);
+          urls.push(url);
+        }
       }
     });
+    this.transmit(urls);
   }
 }
 

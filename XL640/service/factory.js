@@ -1,5 +1,9 @@
 const Net = require("net");
+const Handler = require("../handlers/handler")
 const ACK = "\x06";
+
+
+const handler = new Handler()
 
 class HttpFactory {
   constructor(host, port) {
@@ -28,7 +32,7 @@ class HttpFactory {
           .toString("utf8")
           .split("\r\n")
           .map((message) => message.trim());
-        this.process(messages);
+        handler.process(messages)
         socket.write(ACK);
       });
 
