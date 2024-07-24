@@ -1,27 +1,31 @@
 const AxiosInstance = require("./axios");
-const IBlisConfig = require("../config/iblis.json");
+const settings = require("../config/iblis.json");
 
 class Sync extends AxiosInstance {
     constructor() {
-        super(IBlisConfig.baseURL, IBlisConfig.timeout)
+        super(settings.baseURL, settings.timeout, settings.username, settings.password)
     }
     transmit(urls) {
-        var url = urls[0];
+        if (urls.length === 0) {
+          console.log("All URLs processed.");
+          return;
+        }
+    
+        const url = urls[0];
         urls.shift();
+    
         this.Axios.get(url)
-            .then(response => {
-                if (urls.length > 0) {
-                    start(urls);
-                }
-                console.log(`\x1b[32m✨️ Success: ${url} - ${response.message}\x1b[0m`);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                if (urls.length > 0) {
-                    start(urls);
-                }
-            });
-    }
+          .then((response) => {
+            console.log(
+              `\x1b[32m✨️ Success: ${url} - ${response.statusText}\x1b[0m`
+            );
+            this.transmit(urls);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error.message);
+            this.transmit(urls);
+          });
+      }
 }
 
 module.exports = Sync;
