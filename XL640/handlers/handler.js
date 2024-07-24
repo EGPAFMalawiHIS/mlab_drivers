@@ -25,7 +25,7 @@ class Handler extends Sync {
       }
       let segments = line.split('Instrument Flag').map(part => part.trim())
       for (const segment of segments) {
-        if(segment.trim == ''){
+        if(segment.trim() == ''){
           continue;
         }
         const regex = /\|\^\^\^([^|]+)\|([^|]+)\|([^|]+)\|/;
