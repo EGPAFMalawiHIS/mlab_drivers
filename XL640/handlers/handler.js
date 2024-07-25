@@ -25,7 +25,7 @@ class Handler extends Sync {
       }
       let segments = line.split('Instrument Flag').map(part => part.trim())
       for (const segment of segments) {
-        if(segment.trim() == ''){
+        if (segment.trim() == '') {
           continue;
         }
         const regex = /\|\^\^\^([^|]+)\|([^|]+)\|([^|]+)\|/;
@@ -44,11 +44,15 @@ class Handler extends Sync {
             encodeURIComponent(parseFloat(value)) +
             "&machine_name=" +
             encodeURIComponent(settings.machineName);
-          urls.push(url);
+          if (value != 'NA') {
+            urls.push(url);
+          }
         }
       }
     });
-    this.transmit(urls);
+    if (urls.length > 0) {
+      this.transmit(urls);
+    }
   }
 }
 
