@@ -15,7 +15,6 @@ let urls = [];
 
 function constructUrls(data) {
     data.forEach((t) => {
-        console.log(t)
         var link = settings.lisPath
             .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(t.accession_number))
             .replace(/\#\{MEASURE_ID\}/, encodeURIComponent(mapping[t.measure]))
