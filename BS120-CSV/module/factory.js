@@ -16,7 +16,7 @@ class Factory {
         let jsonData = [];
         data.forEach((value, index) => {
             jsonData.push({
-                "accession_number": value["﷽Sample"],
+                "accession_number": value["Bar Code"],
                 "measure": value["Test"],
                 "result": value["Concentration"]
             })
