@@ -1,0 +1,6 @@
+{
+	"iblsBaseURL": "http://127.0.0.1:8001/api/update_result.php",
+	"iblisUsername": "admin",
+	"iblisPassword": "pass",
+	"servicePort": "5050"
+}

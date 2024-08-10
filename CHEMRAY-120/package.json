@@ -1,0 +1,25 @@
+{
+  "name": "chemray-120",
+  "version": "1.0.0",
+  "description": "Chemray-120 biochemistru analyzer machine driver",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [
+    "Chemray",
+    "120",
+    "HL7",
+    "LIS"
+  ],
+  "author": "Hopson Gausi, Kelvin Chidothi",
+  "license": "ISC",
+  "dependencies": {
+    "@egpafmalawi/machine-driver-utility": "^1.0.2-2",
+    "path": "^0.12.7",
+    "simple-hl7": "^3.2.4"
+  }
+}
