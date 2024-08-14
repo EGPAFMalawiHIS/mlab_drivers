@@ -10,15 +10,21 @@ class Watcher {
   }
   watch(callback) {
     var watcher = chokidar.watch(this.folder, {
-      ignored: /[\/\\]\./,
+      ignored: false,
       persistent: true,
+      awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 100,
+      },
     });
+  
     console.log(
-      `\x1b[33m✨️ABL 800 FLEX Driver Running - Watching dir ${this.folder} for .csv file changes\x1b[0m`
+      `\x1b[33m✨️ABL 800 FLEX Driver Running - Watching dir ${this.folder} for .zip file changes\x1b[0m`
     );
     watcher.on("add", (__path__) => {
-      console.log(`\x1b[33m✨️File changed: ${__path__}\x1b[0m`);
-      if (__path__ && path.extname(__path__) === ".zip") {
+      const filename = path.basename(__path__)
+      console.log(`File changed: ${filename}`)
+      if (__path__ && path.basename(__path__) === ".zip") {
         fs.createReadStream(__path__)
           .pipe(unzipper.Parse())
           .on("entry", function (entry) {

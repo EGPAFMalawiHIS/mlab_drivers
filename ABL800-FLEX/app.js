@@ -1,6 +1,7 @@
 const Watcher = require('./module/watcher');
 const Factory = require('./module/factory')
 const fs = require('fs');
+const path = require("path")
 
 var client = require('node-rest-client').Client;
 var __path__ = require('path');
@@ -45,11 +46,18 @@ watcher.watch((csvData, __path__) => {
     const factory = new Factory(csvData);
     factory.process((data) => {
         constructUrls(data.filter((item) => item.accession_number !== undefined));
-        console.log(data)
         console.log(urls);
         sendData(urls);
-        fs.unlink(__path__, (error) => {
-            console.error(error)
-        })
-    })
+    });
+    if (path.basename(__path__) === '.zip') {
+        if (__path__ && fs.existsSync(__path__)) {
+            fs.unlink(__path__, (error) => {
+                if (error) {
+                    console.error(`Error deleting file ${__path__}:`, error);
+                } else {
+                    console.log(`File ${__path__} deleted successfully.`);
+                }
+            });
+        }
+    }
 });
