@@ -47,11 +47,8 @@ function sendData(urls) {
 watcher.watch((csvData, __path__) => {
     const factory = new Factory(csvData);
     factory.process((data) => {
-        const filteredData = [];
-        data.map(function(item) {
-            if(item.accession_number !== undefined && item.accession_number !== null){
-                filteredData.push(item)
-            }
+        const filteredData = data.filter(function(item) {
+            return item.accession_number !== undefined && item.accession_number !== null
         });
         constructUrls(filteredData);
         console.log(urls);
