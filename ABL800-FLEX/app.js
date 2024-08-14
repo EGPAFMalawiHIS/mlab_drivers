@@ -15,7 +15,9 @@ const watcher = new Watcher(folderPath);
 let urls = [];
 
 function constructUrls(data) {
-    data.forEach((t) => {
+    console.log("kliugyftveyfu")
+    console.log(data)
+    data.map((t) => {
         console.log(t)
         var link = settings.lisPath
             .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(t.accession_number))
@@ -45,7 +47,13 @@ function sendData(urls) {
 watcher.watch((csvData, __path__) => {
     const factory = new Factory(csvData);
     factory.process((data) => {
-        constructUrls(data.filter((item) => item.accession_number !== undefined));
+        const filteredData = [];
+        data.map(function(item) {
+            if(item.accession_number !== undefined && item.accession_number !== null){
+                filteredData.push(item)
+            }
+        });
+        constructUrls(filteredData);
         console.log(urls);
         sendData(urls);
     });
