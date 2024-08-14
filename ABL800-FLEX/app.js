@@ -15,14 +15,11 @@ const watcher = new Watcher(folderPath);
 let urls = [];
 
 function constructUrls(data) {
-    console.log("kliugyftveyfu")
-    console.log(data)
-    data.map((t) => {
-        console.log(t)
+    data.results.map((result) => {
         var link = settings.lisPath
-            .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(t.accession_number))
-            .replace(/\#\{MEASURE_ID\}/, encodeURIComponent(mapping[t.measure]))
-            .replace(/\#\{RESULT\}/, encodeURIComponent(t.result));
+            .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(data.accession_number))
+            .replace(/\#\{MEASURE_ID\}/, encodeURIComponent(mapping[result.test]))
+            .replace(/\#\{RESULT\}/, encodeURIComponent(result.value));
         urls.push(link);
     })
 }
@@ -47,14 +44,14 @@ function sendData(urls) {
 watcher.watch((csvData, __path__) => {
     const factory = new Factory(csvData);
     factory.process((data) => {
-        const filteredData = data.filter(function(item) {
-            return item.accession_number !== undefined && item.accession_number !== null
-        });
-        constructUrls(filteredData);
-        console.log(urls);
-        sendData(urls);
+        if(data.accession_number  !== null){
+            constructUrls(data);
+            console.log(urls);
+            sendData(urls);
+        }
+        
     });
-    if (path.basename(__path__) === '.zip') {
+    if (path.basename(__path__) === 'PatInfo.txt') {
         if (__path__ && fs.existsSync(__path__)) {
             fs.unlink(__path__, (error) => {
                 if (error) {
