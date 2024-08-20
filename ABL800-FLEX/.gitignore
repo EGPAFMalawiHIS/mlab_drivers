@@ -2,3 +2,4 @@ node_modules/
 package-lock.json
 .zip
 outputs
+config/settings.json
