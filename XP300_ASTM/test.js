@@ -47,11 +47,10 @@ function handleData(data) {
           }
         }
       });                                                                                                                                                                                                
-  )
+  });
 }
 urls = generateUrls(genericMappings)
 sendData(urls)                                                                                                                                                                                         
-};
 
 data.forEach((message) => {
   message.forEach((item) => {
@@ -82,12 +81,12 @@ data.forEach((message) => {
 //     }
 //   });
 
-// function generateUrls(measurements) {
-//   const baseUrl = `${settings.protocol}://${settings.IblisIpAddress}:${settings.port}${settings.path}`;
-//   return Object.entries(measurements).map(([measure, { id, value }]) => {
-//     return `${baseUrl}?specimen_id=${accessionNumber}&measure_id=${id}&result=${value}`;
-//   });
-// }
+function generateUrls(measurements) {
+  const baseUrl = `${settings.protocol}://${settings.IblisIpAddress}:${settings.port}${settings.path}`;
+  return Object.entries(measurements).map(([measure, { id, value }]) => {
+    return `${baseUrl}?specimen_id=${accessionNumber}&measure_id=${id}&result=${value}`;
+  });
+}
 
 // const urls = generateUrls(genericMappings);
 // console.log(genericMappings);
