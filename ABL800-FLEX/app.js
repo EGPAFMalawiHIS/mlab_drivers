@@ -1,6 +1,7 @@
 const Watcher = require('./module/watcher');
 const Factory = require('./module/factory')
 const fs = require('fs');
+const path = require("path")
 
 var client = require('node-rest-client').Client;
 var __path__ = require('path');
@@ -14,11 +15,11 @@ const watcher = new Watcher(folderPath);
 let urls = [];
 
 function constructUrls(data) {
-    data.forEach((t) => {
+    data.results.map((result) => {
         var link = settings.lisPath
-            .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(t.accession_number))
-            .replace(/\#\{MEASURE_ID\}/, encodeURIComponent(mapping[t.measure]))
-            .replace(/\#\{RESULT\}/, encodeURIComponent(t.result));
+            .replace(/\#\{SPECIMEN_ID\}/, encodeURIComponent(data.accession_number))
+            .replace(/\#\{MEASURE_ID\}/, encodeURIComponent(mapping[result.test]))
+            .replace(/\#\{RESULT\}/, encodeURIComponent(result.value));
         urls.push(link);
     })
 }
@@ -43,11 +44,22 @@ function sendData(urls) {
 watcher.watch((csvData, __path__) => {
     const factory = new Factory(csvData);
     factory.process((data) => {
-        constructUrls(data);
-        console.log(urls)
-        sendData(urls);
-        fs.unlink(__path__, (error) => {
-            console.error(error)
-        })
-    })
+        if(data.accession_number  !== null){
+            constructUrls(data);
+            console.log(urls);
+            sendData(urls);
+        }
+        
+    });
+    if (path.basename(__path__) === 'PatInfo.txt') {
+        if (__path__ && fs.existsSync(__path__)) {
+            fs.unlink(__path__, (error) => {
+                if (error) {
+                    console.error(`Error deleting file ${__path__}:`, error);
+                } else {
+                    console.log(`File ${__path__} deleted successfully.`);
+                }
+            });
+        }
+    }
 });

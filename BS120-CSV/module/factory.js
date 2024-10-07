@@ -1,5 +1,3 @@
-const csv = require('csvtojson')
-
 class Factory {
     constructor(data) {
         this.data = data;
@@ -13,29 +11,21 @@ class Factory {
         }
         return newObj;
     }
+
     jsonify(data) {
         let jsonData = [];
         data.forEach((value, index) => {
-            if (index !== 0) {
-                let formatedObj = this.removeFieldsWithSingleQuotes(value)
-                jsonData.push({
-                    "accession_number": formatedObj.field1,
-                    "measure": formatedObj.field9,
-                    "result": formatedObj.field12
-                })
-            }
+            jsonData.push({
+                "accession_number": value["Bar Code"],
+                "measure": value["Test"],
+                "result": value["Concentration"]
+            })
         })
         return jsonData;
     }
+    
     process(callback) {
-        csv({
-            noheader: true,
-            output: "json"
-        })
-        .fromString(this.data.toString())
-        .then((csvRow) => {
-            callback(this.jsonify(csvRow))
-        })
+        callback(this.jsonify(this.data));
     }
 }
 

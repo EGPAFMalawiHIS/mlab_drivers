@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const chokidar = require('chokidar');
+const csv = require('csv-parse/sync');
+const iconv = require('iconv-lite');
 
 class Watcher {
     constructor(folder) {
@@ -18,7 +20,17 @@ class Watcher {
                         console.error('An error occurred: ', err);
                         return;
                     }
-                    callback(data, __path__);
+                    try {
+                        const utf8Data = iconv.decode(data, 'utf16');
+                        const records = csv.parse(utf8Data, {
+                            columns: true,
+                            skip_empty_lines: true,
+                            delimiter: '\t'
+                        });
+                        callback(records, __path__);
+                    } catch (error) {
+                        console.error('Error parsing CSV:', error);
+                    }
                 });
             }
         })
