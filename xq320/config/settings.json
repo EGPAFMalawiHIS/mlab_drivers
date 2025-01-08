@@ -1,0 +1,8 @@
+{
+    "lisPath": "http://localhost:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=sysmex-xq320",
+    "lisUser": "mlab_username",
+    "lisPassword": "mlab_password",
+    "machineName": "sysmex-xq320",
+    "serverIp": "127.0.0.1",
+    "serverPort": "1234"
+}

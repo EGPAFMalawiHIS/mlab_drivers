@@ -1,0 +1,15 @@
+[Unit]
+Description=Monitor BC20 Service
+After=network.target
+
+[Service]
+Type=simple
+User=hopgausi
+WorkingDirectory=/home/hopgausi/HisMalawi/mlab_drivers/BC20
+ExecStart=/bin/bash -lc 'source $HOME/.nvm/nvm.sh && nvm use 18 && ./monitor_bc_20.sh'
+RestartSec=1
+Restart=on-failure
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
