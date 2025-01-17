@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "csv-parse": "^5.5.6",
+    "csv-parse": "^4.16.3",
     "csv-parser": "^3.0.0",
     "csvtojson": "^2.0.10",
     "events": "^3.3.0",

@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-const chokidar = require('chokidar');
-const csv = require('csv-parse/sync');
-const iconv = require('iconv-lite');
+const chokidar = require("chokidar");
+const parse = require("csv-parse");
+const iconv = require("iconv-lite");
 
 class Watcher {
     constructor(folder) {
@@ -10,30 +10,35 @@ class Watcher {
     }
 
     watch(callback) {
-        var watcher = chokidar.watch(this.folder, {ignored: /[\/\\]\./, persistent: true});
-        console.log(`\x1b[33m✨️BS120 Node Driver Running - Watching dir ${this.folder} for .csv file changes\x1b[0m`);
-        watcher.on('all', (_event, __path__) => {
-            console.log(`\x1b[33m✨️File changed: ${__path__}\x1b[0m`);
-            if(path.extname(__path__) === '.csv'){
-                fs.readFile(path.join(__path__), "utf8", (err, data) => {
+        const watcher = chokidar.watch(this.folder, { ignored: /[\/\\]\./, persistent: true });
+        console.log(`\x1b[33m✨️BS120 Driver Running - Watching dir ${this.folder} for exported .csv file changes\x1b[0m`);
+        watcher.on("all", (_event, filePath) => {
+            console.log(`\x1b[33m✨️File changed: ${filePath}\x1b[0m`);
+            if (path.extname(filePath) === ".csv") {
+                fs.readFile(filePath, null, (err, data) => {
                     if (err) {
-                        console.error('An error occurred: ', err);
+                        console.error("An error occurred: ", err);
                         return;
                     }
                     try {
-                        const utf8Data = iconv.decode(data, 'utf16');
-                        const records = csv.parse(utf8Data, {
-                            columns: true,
-                            skip_empty_lines: true,
-                            delimiter: '\t'
+                        const utf8Data = iconv.decode(data, "utf16");
+                        parse(utf8Data, { 
+                            columns: true, 
+                            skip_empty_lines: true, 
+                            delimiter: "\t" 
+                        }, (parseError, records) => {
+                            if (parseError) {
+                                console.error("Error parsing CSV:", parseError);
+                                return;
+                            }
+                            callback(records, filePath);
                         });
-                        callback(records, __path__);
                     } catch (error) {
-                        console.error('Error parsing CSV:', error);
+                        console.error("Error processing file:", error);
                     }
                 });
             }
-        })
+        });
     }
 }
 
