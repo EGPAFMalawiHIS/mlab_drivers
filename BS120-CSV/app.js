@@ -46,8 +46,8 @@ watcher.watch((csvData, __path__) => {
         constructUrls(data);
         console.log(urls)
         sendData(urls);
-        fs.unlink(__path__, (error) => {
-            console.error(error)
-        })
+        setTimeout(() => {fs.unlink(__path__, (file_path) => {
+            if (file_path == null) console.info('File deleted successfully!');
+        })}, 2000);
     })
 });
