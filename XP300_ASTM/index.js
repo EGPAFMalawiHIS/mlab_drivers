@@ -22,23 +22,6 @@ function generateUrls(measurements) {
 
 var urls = new Array();
 
-// function sendData(urls) {
-//     console.log("-- sending data to server --")
-//     var getUrl = urls[0];
-//     console.log(getUrl)
-//     urls.shift();
-//     axios.get(getUrl, {
-//         auth: {
-//             username: settings.username,
-//             password: settings.password
-//         }
-//     }).then(() => {
-//         sendData(urls)
-//     }).catch(() => {
-
-//     })
-// }
-
 async function sendData(urls) {
   if (!urls.length) return; // Stop if no more URLs
 
