@@ -37,14 +37,14 @@ async function sendData(urls) {
       });
       sendData(remainingUrls); // Recursive call with remaining URLs
   } catch (error) {
-      console.error("Error sending data:", error.message);
+      console.error("Error sending data:", error.data.error);
   }
 }
 
 function generateUrls(measurements) {
   const baseUrl = `${settings.protocol}://${settings.IblisIpAddress}:${settings.port}${settings.path}`;
   return Object.entries(measurements).map(([measure, { id, value }]) => {
-    return `${baseUrl}?specimen_id=${ACCESSION_NUMBER}&measure_id=${id}&result=${value}`;
+    return `${baseUrl}?specimen_id=${ACCESSION_NUMBER}&measure_id=${id}&result=${value}&machine_name=${config.machineName}`;
   });
 }
 

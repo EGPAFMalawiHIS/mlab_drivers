@@ -16,7 +16,7 @@ var ACCESSION_NUMBER = "";
 function generateUrls(measurements) {
   const baseUrl = `${settings.protocol}://${settings.IblisIpAddress}:${settings.port}${settings.path}`;
   return Object.entries(measurements).map(([, { id, value }]) => {
-    return `${baseUrl}?specimen_id=${ACCESSION_NUMBER}&measure_id=${id}&result=${value}`;
+    return `${baseUrl}?specimen_id=${ACCESSION_NUMBER}&measure_id=${id}&result=${value}&machine_name=${config.machineName}`;
   });
 }
 

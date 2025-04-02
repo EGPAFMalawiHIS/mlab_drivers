@@ -1,8 +1,8 @@
 {
 	"protocol": "http",
 	"IblisIpAddress": "127.0.0.1",
-	"port": "8001",
-	"path": "/api/update_result.php",
-	"username": "admin",
+	"port": "8005",
+	"path": "/api/v1/interfacer",
+	"username": "admini",
 	"password": "pass"
 }

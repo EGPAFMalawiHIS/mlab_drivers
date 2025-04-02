@@ -1,9 +1,9 @@
 {
 	"protocol": "http",
 	"host": "192.168.100.200",
-	"port": "8001",
+	"port": "8005",
 	"username": "administr",
 	"password": "123456",
-	"path": "/api/update_result.php",
+	"path": "/api/v1/interfacer",
 	"machineName": "mindray-BC3000"
 }
