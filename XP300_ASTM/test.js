@@ -37,7 +37,7 @@ async function sendData(urls) {
       });
       sendData(remainingUrls); // Recursive call with remaining URLs
   } catch (error) {
-      console.error("Error sending data:", error.data.error);
+      console.error("Error sending data:", error);
   }
 }
 
@@ -52,24 +52,23 @@ function handleData(data) {
   // const buffer = Buffer.from(data, 'utf8');
   // const messages = buffer.toString('utf8').split('\r\n').map(message => message.trim() );
   const messages = [ 'O|1||^^  PDH2500000003^M|^^^^WBC\\^^^^RBC\\^^^^HGB\\^^^^HCT\\^^^^MCV\\^^^^MCH\\^^^^MCHC\\^^^^PLT\\^^^^LYM%\\^^^^MXD%\\^^^^NEUT%\\^^^^LYM#\\^^^^MXD#\\^^^^NEUT#\\^^^^RDW-SD\\^^^^RDW-CV\\^^^^PDW\\^^^^MPV\\^^^^P-LCR\\^^^^PCT|||||||N||||||||||||||F\rR|1|^^^^WBC^1|  5.3|10*3/uL||N||||GOOD           ||20250402105500\rR|2|^^^^RBC^1| 3.35|10*6/uL||N||||GOOD           ||20250402105500\rR|3|^^^^HGB^1|  9.8|g/dL||N||||GOOD           ||20250402105500\rR|4|^^^^HCT^1| 28.5|%||N||||GOOD           ||20250402105500\rR|5|^^^^MCV^1| 85.1|fL||L||||GOOD           ||20250402105500\rR|6|^^^^MCH^1| 29.3|pg||N||||GOOD           ||20250402105500\rR|7|^^^^MCHC^1| 34.4|g/dL||N||||GOOD           ||20250402105500\rR|8|^^^^PLT^1|  151|10*3/uL||N||||GOOD           ||20250402105500\rR|9|^^^^LYM%^1| 32.4|%||N||||GOOD           ||20250402105500\rR|10|^^^^MXD%^1| 19.2|%||N||||GOOD           ||20250402105500\rR|11|^^^^NEUT%^1| 48.4|%||N||||GOOD           ||20250402105500\rR|12|^^^^LYM#^1|  1.7|10*3/uL||N||||GOOD           ||20250402105500\rR|13|^^^^MXD#^1|  1.0|10*3/uL||N||||GOOD           ||20250402105500\rR|14|^^^^NEUT#^1|  2.6|10*3/uL||N||||GOOD           ||20250402105500\rR|15|^^^^RDW-SD^1| 49.5|fL||N||||GOOD           ||20250402105500\rR|16|^^^^RDW-CV^1| 15.6|%||N||||GOOD           ||20250402105500\rR|17|^^^^PDW^1| 13.6|fL||N||||GOOD           ||20250402105500\rR|18|^^^^MPV^1| 10.3|fL||N||||GOOD           ||20250402105500\rR|19|^^^^P-LCR^1| 28.4|%||N||||GOOD           ||20250402105500\rR|20|^^^^']
+  let genericMappings = {};
+  let accession_number = "";
   messages.forEach((message) => {
       const accRegex = /(\d+)\^([A-Z])\|/;
       const match = message.toString().match(accRegex)
       if(match){
-          ACCESSION_NUMBER = match[1]
+        accession_number = match[1]
       }
-      console.log(ACCESSION_NUMBER)
       const regex = /\|\^\^\^\^([\w%#-]+)\^1\|\s+([\d.]+)/;
       message
       .toString()
       .split(/R\|\d+/)
       .forEach((str) => {
-        console.log(str)
-        const match = str.match(regex);
+          const match = str.match(regex);
           if (match) {
               let [, parameter, value] = match;
               parameter = parameter;
-              console.log(parameter)
               param = fbcParameters[parameter];
               if (param) {
                   genericMappings[param] = { id: mapping[param], value: value };
@@ -77,10 +76,18 @@ function handleData(data) {
           }
       });
   })
-  urls = generateUrls(genericMappings)
-  console.log(genericMappings)
-  console.log(urls)
-  sendData(urls)
-}                                                                                                                                              
+  if (accession_number == "" || accession_number == null || accession_number == undefined) {
+      console.log("Accession number not found");
+      return [];
+  }else{
+      console.log("Accession number found");
+      console.log(accession_number)    
+      let urls = generateUrls(genericMappings, accession_number)
+      return urls
+  }
+};                                                                                                                                          
 
-handleData(data)
+let urls = handleData(data);
+if (urls.length > 0) {
+    sendData(urls);
+}
