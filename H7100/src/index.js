@@ -1,15 +1,15 @@
 const connectionHandler = require('./connection/connectionHandler');
-const config = require('./config/config');
 const logger = require('./utils/logger');
+
+process.chdir(__dirname);
 
 class H7100Driver {
     constructor() {
         logger.info('Initializing H7100 Driver');
     }
 
-    start(resultCallback) {
+    start() {
         try {
-            config.resultCallback = resultCallback;
             connectionHandler.start();
 
             logger.info('H7100 Driver started successfully');
@@ -30,4 +30,8 @@ class H7100Driver {
     }
 }
 
-module.exports = new H7100Driver();
+// Create and start the driver immediately
+const driver = new H7100Driver();
+driver.start();
+
+module.exports = driver;

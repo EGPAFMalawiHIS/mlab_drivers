@@ -1,96 +1,63 @@
-const net = require('net');
+const hl7 = require('simple-hl7');
 const logger = require('../utils/logger');
-const config = require('../config/config');
-const hl7Parser = require('../parsers/hl7Parser');
+const settings = require('../../config/settings.json');
+const iblisService = require('../services/iblisService');
 
 class ConnectionHandler {
     constructor() {
-        this.server = null;
-        this.retryCount = 0;
+        this.server = hl7.tcp();
     }
 
     start() {
-        this.server = net.createServer((socket) => {
-            logger.info('New connection established');
+        this.server.use((req, res, next) => {
+            logger.info('New message received');
 
-            let messageBuffer = '';
-            const startMarker = '\x0b';
-            const endMarker = '\x1c\x0d';
+            try {
+                const results = this.processMessage(req.msg);
 
-            socket.on('data', (data) => {
-                try {
-                    messageBuffer += data.toString();
+                // Send acknowledgment
+                res.end();
 
-                    if (messageBuffer.includes(startMarker) && messageBuffer.includes(endMarker)) {
-                        const messages = messageBuffer.split(startMarker);
-
-                        messages.forEach(msg => {
-                            if (msg.includes(endMarker)) {
-                                const cleanMsg = msg.split(endMarker)[0];
-                                this.processMessage(cleanMsg, socket);
-                            }
-                        });
-
-                        messageBuffer = messages[messages.length - 1];
-                    }
-                } catch (error) {
-                    logger.error('Error processing data:', error);
-                }
-            });
-
-            socket.on('error', (error) => {
-                logger.error('Socket error:', error);
-            });
-
-            socket.on('close', () => {
-                logger.info('Connection closed');
-            });
+                // Send results to IBLIS
+                iblisService.sendResults(results);
+            } catch (error) {
+                logger.error('Error processing message:', error);
+                res.end(new Error('Failed to process message'));
+            }
         });
 
-        this.server.on('error', (error) => {
-            logger.error('Server error:', error);
-            this.handleError(error);
-        });
-
-        this.server.listen(config.port, config.host, () => {
-            logger.info(`Server listening on ${config.host}:${config.port}`);
-            this.retryCount = 0;
-        });
+        this.server.start(settings.port, settings.host);
+        logger.info(`Server listening on ${settings.host}:${settings.port}`);
     }
 
-    processMessage(message, socket) {
+    processMessage(msg) {
         try {
-            const results = hl7Parser.parse(message);
-            const ack = hl7Parser.createACK(message);
-            socket.write(startMarker + ack + endMarker);
+            const pid = msg.getSegment('PID');
+            const obx = msg.getSegments('OBX');
 
-            if (config.resultCallback && typeof config.resultCallback === 'function') {
-                config.resultCallback(results);
-            }
+            const results = {
+                patientId: pid.getComponent(1, 1),
+                results: []
+            };
+
+            obx.forEach(segment => {
+                results.results.push({
+                    testCode: segment.getComponent(3, 1),
+                    value: segment.getComponent(5, 1)
+                });
+            });
+
+            return results;
         } catch (error) {
             logger.error('Error processing message:', error);
-        }
-    }
-
-    handleError(error) {
-        if (error.code === 'EADDRINUSE') {
-            logger.error(`Port ${config.port} is already in use`);
-            if (this.retryCount < config.maxRetries) {
-                this.retryCount++;
-                logger.info(`Retrying in ${config.retryInterval/1000} seconds...`);
-                setTimeout(() => this.start(), config.retryInterval);
-            } else {
-                logger.error('Max retry attempts reached. Server failed to start.');
-                process.exit(1);
-            }
+            throw error;
         }
     }
 
     stop() {
         if (this.server) {
-            this.server.close(() => {
-                logger.info('Server stopped');
-            });
+            this.server.stop();
+            logger.info('Server stopped');
         }
     }
 }
