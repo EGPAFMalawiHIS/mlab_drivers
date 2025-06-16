@@ -10,13 +10,7 @@ class IblisService {
         this.mapping = mapping;
     }
 
-    buildUrl(specimenId, testCode, result) {
-        if (!this.mapping[testCode]) {
-            logger.error(`No mapping found for test code: ${testCode}`);
-            return;
-        }
-
-        const url = this.settings.lisPath
+    buildUrl(specimenId, testCode, result) {const url = this.settings.lisPath
             .replace('#{SPECIMEN_ID}', specimenId)
             .replace('#{MEASURE_ID}', this.mapping[testCode])
             .replace('#{RESULT}', result);
@@ -27,10 +21,10 @@ class IblisService {
     async sendResults(results) {
         try {
             this.urls = [];
-            const { patientId, results: testResults } = results;
+            const { sampleID, results: testResults } = results;
 
             testResults.forEach(result => {
-                this.buildUrl(patientId, result.testCode, result.value);
+                this.buildUrl(sampleID, result.id, result.value);
             });
 
             if (this.urls.length === 0) {
@@ -38,7 +32,8 @@ class IblisService {
                 return;
             }
 
-            logger.info(`Sending ${this.urls.length} results to IBLIS for patient ${patientId}`);
+            logger.info(`Sending ${this.urls.length} results to IBLIS for patient ${sampleID}`);
+            logger.info(this.urls)
 
             utils.sendDataToIBLIS(
                 this.urls,

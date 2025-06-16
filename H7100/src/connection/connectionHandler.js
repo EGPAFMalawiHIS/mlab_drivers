@@ -2,6 +2,7 @@ const hl7 = require('simple-hl7');
 const logger = require('../utils/logger');
 const settings = require('../../config/settings.json');
 const iblisService = require('../services/iblisService');
+const mapping = require('../../config/mapping.json')
 
 class ConnectionHandler {
     constructor() {
@@ -11,14 +12,9 @@ class ConnectionHandler {
     start() {
         this.server.use((req, res, next) => {
             logger.info('New message received');
-
             try {
                 const results = this.processMessage(req.msg);
-
-                // Send acknowledgment
                 res.end();
-
-                // Send results to IBLIS
                 iblisService.sendResults(results);
             } catch (error) {
                 logger.error('Error processing message:', error);
@@ -26,28 +22,33 @@ class ConnectionHandler {
             }
         });
 
-        this.server.start(settings.port, settings.host);
+        this.server.start(settings.port, 'utf-8', { host: settings.host });
         logger.info(`Server listening on ${settings.host}:${settings.port}`);
     }
 
     processMessage(msg) {
         try {
-            const pid = msg.getSegment('PID');
-            const obx = msg.getSegments('OBX');
-
-            const results = {
-                patientId: pid.getComponent(1, 1),
+            let sampleID = msg.getSegment('OBR').fields[2].value[0];
+            let results = msg.getSegments('OBX');
+            
+            const processedResults = {
+                sampleID: sampleID,
                 results: []
             };
-
-            obx.forEach(segment => {
-                results.results.push({
-                    testCode: segment.getComponent(3, 1),
-                    value: segment.getComponent(5, 1)
+            
+            results.forEach(result => {
+                let measureName = result.fields[2].value[0][1].value[0];
+                let measureResult = result.fields[4].value[0][0].value[0];
+                let measureID = mapping[measureName] || ""
+                
+                processedResults.results.push({
+                    name: measureName,
+                    result: measureResult,
+                    id: measureID
                 });
             });
-
-            return results;
+            
+            return processedResults;
         } catch (error) {
             logger.error('Error processing message:', error);
             throw error;
