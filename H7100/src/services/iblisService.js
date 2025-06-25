@@ -23,11 +23,10 @@ class IblisService {
 
   sendData(urls) {
     var url = urls[0];
-    console.info(url);
     urls.shift();
     const self = this;
 
-    new client(options_auth).get(url, function (data, response) {
+    new client(options_auth).get(url, function (data, response) {  
       if (urls.length > 0) {
         self.sendData(urls);
       }
