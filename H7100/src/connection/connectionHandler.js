@@ -46,8 +46,7 @@ class ConnectionHandler {
                     result: measureResult,
                     id: measureID
                 });
-            });
-            
+            });            
             return processedResults;
         } catch (error) {
             logger.error('Error processing message:', error);
