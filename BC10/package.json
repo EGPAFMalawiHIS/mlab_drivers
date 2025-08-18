@@ -1,0 +1,32 @@
+{
+  "name": "bc10",
+  "version": "1.0.0",
+  "description": "Machine driver for Mindray BC10 lab machine",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EGPAFMalawiHIS/mlab_drivers.git"
+  },
+  "keywords": [
+    "BC10",
+    "Mindray",
+    "lab machine",
+    "driver",
+    "IBLIS"
+  ],
+  "author": "EGPAF Malawi HIS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EGPAFMalawiHIS/mlab_drivers/issues"
+  },
+  "homepage": "https://github.com/EGPAFMalawiHIS/mlab_drivers#readme",
+  "dependencies": {
+    "node-rest-client": "^3.1.1",
+    "path": "^0.12.7",
+    "simple-hl7": "^3.2.4"
+  }
+}

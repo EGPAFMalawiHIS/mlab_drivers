@@ -1,0 +1,10 @@
+#Ignore node modules
+node_modules
+
+#ignore package lock file
+package-lock.json
+
+
+#Ignore config files
+settings.json
+mapping.json
