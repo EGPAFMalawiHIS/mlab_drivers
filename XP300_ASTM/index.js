@@ -71,8 +71,8 @@ function handleData(data) {
         return [];
     }else{
         console.log("Accession number found");
-        console.log(accession_number)  
-        console.log(genericMappings)  
+        console.log(accession_number)
+        console.log(genericMappings)
         let urls = generateUrls(genericMappings, accession_number)
         return urls
     }
