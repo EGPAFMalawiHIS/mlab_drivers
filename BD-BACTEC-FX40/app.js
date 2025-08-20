@@ -150,8 +150,6 @@ async function sendDataToLIS(urls) {
         return;
     }
 
-    console.log(`Sending ${urls.length} results to LIS...`);
-
     for (const url of urls) {
         try {
             console.log(`Sending request to: ${url}`);
