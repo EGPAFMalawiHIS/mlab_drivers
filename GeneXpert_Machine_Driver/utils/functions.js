@@ -92,16 +92,32 @@ function processResults(resultSegmentSections, sampleId, machineName) {
       let modifier = resultSegmentSectionItems[6];
       let processedModifier = (modifier === ">" || modifier === "<") ? modifier : "";
 
-      // Don't include minRange for "NOT DETECTED" results
+      // Clean up result value by removing carets
       let cleanResultValue = resultValue.replace(/\^/g, "");
-      let minRange = cleanResultValue.toUpperCase() === "NOT DETECTED" ? "" : resultSegmentSectionItems[5].split("to")[0];
+
+      // Special handling for NOT DETECTED and ERROR results
+      let minRange = "";
+      let units = resultSegmentSectionItems[4];
+
+      if (cleanResultValue.toUpperCase() === "NOT DETECTED") {
+        // Don't include minRange or units for NOT DETECTED results
+        minRange = "";
+        units = "";
+      } else if (cleanResultValue === "ERROR") {
+        // Don't include minRange or units for ERROR results
+        minRange = "";
+        units = "";
+      } else {
+        // Normal case - include minRange for normal results
+        minRange = resultSegmentSectionItems[5].split("to")[0];
+      }
 
       resultSegmentSectionResponse.push({
         sampleId: sampleId,
         hostTestCode: hostTestCode,
         resultTestCode: resultTestCode,
         resultValue: cleanResultValue,
-        units: resultSegmentSectionItems[4],
+        units: units,
         valueModifier: processedModifier,
         minRange: minRange,
         machineName: machineName,
@@ -125,8 +141,14 @@ function getResultUrls(results, mapping, settingsMachineName, buildUrl) {
     ) {
       measureId = mapping["MTB XDR"];
     }
-    let resultvalue =
-      `${result.resultValue} ${result.valueModifier} ${result.minRange}${result.units}`.trim();
+    let resultvalue = "";
+    if (result.resultValue === "ERROR") {
+      resultvalue = "ERROR";
+    } else if (result.resultValue.toUpperCase() === "NOT DETECTED") {
+      resultvalue = "NOT DETECTED";
+    } else {
+      resultvalue = `${result.resultValue} ${result.valueModifier} ${result.minRange} ${result.units}`.trim();
+    }
     let url = buildUrl(sampleId, measureId, resultvalue, settingsMachineName);
 
     urls.push(url);
