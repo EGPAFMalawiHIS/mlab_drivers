@@ -78,11 +78,15 @@ function processResults(resultSegmentSections, sampleId, machineName) {
     let assayDetails = resultSegmentSectionItems[2].split("^");
     let hostTestCode = assayDetails[1];
     let resultTestCode = assayDetails[3];
+    // Remove numbers from the result test code
+    resultTestCode = resultTestCode.replace(/[0-9]/g, "");
     let resultValue = resultSegmentSectionItems[3];
     if (
       !(resultValue === "^") &&
       !(resultValue === "") &&
-      !(sampleId === null)
+      !(sampleId === null) &&
+      // Skip results containing "LOG"
+      !resultSegmentSection.includes("LOG")
     ) {
       resultSegmentSectionResponse.push({
         sampleId: sampleId,
