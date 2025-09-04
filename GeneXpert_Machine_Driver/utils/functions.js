@@ -88,14 +88,22 @@ function processResults(resultSegmentSections, sampleId, machineName) {
       // Skip results containing "LOG"
       !resultSegmentSection.includes("LOG")
     ) {
+      // Process the value modifier - only keep ">" and "<" characters
+      let modifier = resultSegmentSectionItems[6];
+      let processedModifier = (modifier === ">" || modifier === "<") ? modifier : "";
+
+      // Don't include minRange for "NOT DETECTED" results
+      let cleanResultValue = resultValue.replace(/\^/g, "");
+      let minRange = cleanResultValue.toUpperCase() === "NOT DETECTED" ? "" : resultSegmentSectionItems[5].split("to")[0];
+
       resultSegmentSectionResponse.push({
         sampleId: sampleId,
         hostTestCode: hostTestCode,
         resultTestCode: resultTestCode,
-        resultValue: resultValue.replace(/\^/g, ""),
+        resultValue: cleanResultValue,
         units: resultSegmentSectionItems[4],
-        valueModifier: resultSegmentSectionItems[6],
-        minRange: resultSegmentSectionItems[5].split("to")[0],
+        valueModifier: processedModifier,
+        minRange: minRange,
         machineName: machineName,
       });
     }
