@@ -24,8 +24,8 @@ hl7Service.use(function(req, res, next) {
     results.forEach(result => {
       let measureName = result.fields[3].value[0][0].value[0];
       let measureResult = result.fields[4].value[0][0].value[0];
-      let measureID = mapping[definitions[measureName]];
-      console.log(`${measureName}-->${definitions[measureName]}-->${measureID}-->${measureResult}`);
+      let measureID = mapping[measureName];
+      console.log(`${measureName}-->${measureID}-->${measureResult}`);
       utils.buildUrl(BASE_URL, sampleID, measureID, measureResult);
   });
   console.log(utils.urls);
