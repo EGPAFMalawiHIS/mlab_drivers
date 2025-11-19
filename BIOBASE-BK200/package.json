@@ -1,0 +1,32 @@
+{
+  "name": "biobase-bk200",
+  "version": "1.0.0",
+  "description": "BIOBASE BK200 Machine Driver with ASTM ACK Protocol",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "bk200",
+    "biobase",
+    "astm",
+    "hematology",
+    "driver",
+    "iblis"
+  ],
+  "author": "EGPAF",
+  "license": "ISC",
+  "dependencies": {
+    "node-rest-client": "^3.1.1",
+    "path": "^0.12.7",
+    "simple-hl7": "^3.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

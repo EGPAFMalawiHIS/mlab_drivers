@@ -1,0 +1,22 @@
+{
+  "name": "bd-bactec-fx40",
+  "version": "1.0.0",
+  "description": "BD BACTEC FX40 Server instance for sending data to LIS via serial connection",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^3.2.4",
+    "axios": "^1.4.0",
+    "serialport": "^10.5.0",
+    "@serialport/parser-readline": "^10.5.0",
+    "node-rest-client": "^3.1.1",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.20.2",
+    "node-uuid": "^1.4.8"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
