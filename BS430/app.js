@@ -19,6 +19,9 @@ hl7Service.use(function(req, res, next) {
     console.log(`${req.msg.log()} \n`);
     // let sampleID = req.msg.getSegment('OBR').fields[2].value[0];
     let sampleID = req.msg.getSegment('PID').fields[1].value[0][0].value[0];
+    if (sampleID.length < 8) {
+        sampleID = req.msg.getSegment('OBR').fields[1].value[0][0].value[0];
+    }
     console.log(`Sample ID: ${sampleID}`);
     let results = req.msg.getSegments('OBX');
     results.forEach(result => {
