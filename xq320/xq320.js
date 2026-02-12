@@ -81,7 +81,7 @@ var server = net.createServer(function(socket) {
 			console.log(specimen_id);
 			cur_pos = (44 + 10); //10 for length of specimen idZzma;luwa
 
-			var format = [
+	  	var format = [
 				["WBC", "***.**"],
 				['RBC', '**.**'],
 				['HGB', '***.*'],
@@ -91,35 +91,34 @@ var server = net.createServer(function(socket) {
 				['MCHC', '***.*'],
 				['PLT', '****'],
 				['LYMPH%', '***.*'],
-				['MONO%', '***.*'],
+				['MXD%', '***.*'],
 				['NEUT%', '***.*'],
 				['EO%', '***.*'],
 				['BASO%', '***.*'],
 				['LYMPH#', '***.**'],
-				['MONO#', '***.**'],
+				['MXD#', '***.**'],
 				['NEUT#', '***.**'],
 				['EO#', '***.**'],
-				['BASO#', '***.**'],
-				['RDW-CV', '**.**'],
-				['RDW-SD', '**.**'],
-				['PDW', '**.**'],
-				['MPV', '**.**'],
-				['P-LCR', '**.**'],
-				['RET%', '**.**'],	
+				['PCT', '**.**'],
+				['RDW-CV', '***.*'],
+				['RDW-SD', '***.*'],
+				['PDW', '***.*'],
+				['MPV', '***.*'],
+				['P-LCR', '***.*'],
+				['RET%', '**.**'],
 				['RET#', '.****'],
 				['IRF', '***.*'],
 				['LFR', '***.*'],
 				['MFR', '***.*'],
 				['HFR', '***.*'],
-				['PCT', '**.**'],
+				['BASO#', '***.**'],
 				['NRBC%', '****.*'],
 				['NRBC#', '***.**'],
 				['IG#', '***.**'],
 				['IG%', '***.*'],
 				['blank', '*****'],
 				['RET-He', '***.*']
-			]
-		
+			];
 
 		var link = settings.lisPath;
 		link = link.replace(/\#\{SPECIMEN_ID\}/, specimen_id);
