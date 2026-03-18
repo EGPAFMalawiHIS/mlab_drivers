@@ -147,7 +147,8 @@ function getResultUrls(results, mapping, settingsMachineName, buildUrl) {
     } else if (result.resultValue.toUpperCase() === "NOT DETECTED") {
       resultvalue = "NOT DETECTED";
     } else {
-      resultvalue = `${result.resultValue} ${result.valueModifier} ${result.minRange} ${result.units}`.trim();
+      // resultvalue = `${result.resultValue} ${result.valueModifier} ${result.minRange} ${result.units}`.trim();
+      resultvalue = `${result.resultValue}`.trim();
     }
     let url = buildUrl(sampleId, measureId, resultvalue, settingsMachineName);
 
