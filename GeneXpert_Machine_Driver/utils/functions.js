@@ -25,7 +25,7 @@ function getTargetSegment(segment) {
 
 function getSampleId(targetSegments) {
   let targetSegment = targetSegments.filter((targetSegment) =>
-    targetSegment.startsWith("O")
+    targetSegment.startsWith("O"),
   );
   if (targetSegment.length == 0) {
     return null;
@@ -43,7 +43,7 @@ function extractSampleId(sampleIdSegment) {
 
 function extractMachineName(targetSegments) {
   let targetSegment = targetSegments.filter((targetSegment) =>
-    targetSegment.startsWith("1H")
+    targetSegment.startsWith("1H"),
   );
   if (targetSegment.length == 0) {
     return "";
@@ -62,7 +62,7 @@ function getResults(targetSegments) {
   let sampleId = getSampleId(targetSegments);
   let machineName = extractMachineName(targetSegments);
   let resultSegmentSections = targetSegments.filter((targetSegment) =>
-    targetSegment.startsWith("R")
+    targetSegment.startsWith("R"),
   );
   if (resultSegmentSections.length == 0) {
     return [];
@@ -90,7 +90,8 @@ function processResults(resultSegmentSections, sampleId, machineName) {
     ) {
       // Process the value modifier - only keep ">" and "<" characters
       let modifier = resultSegmentSectionItems[6];
-      let processedModifier = (modifier === ">" || modifier === "<") ? modifier : "";
+      let processedModifier =
+        modifier === ">" || modifier === "<" ? modifier : "";
 
       // Clean up result value by removing carets
       let cleanResultValue = resultValue.replace(/\^/g, "");
@@ -111,12 +112,25 @@ function processResults(resultSegmentSections, sampleId, machineName) {
         // Normal case - include minRange for normal results
         minRange = resultSegmentSectionItems[5].split("to")[0];
       }
-
+      const upperTestCode = resultTestCode.toUpperCase();
+      const isViralLoadTest =
+        upperTestCode.includes("HIV") ||
+        upperTestCode.includes("VL") ||
+        upperTestCode.includes("VIRAL LOAD") ||
+        upperTestCode.includes("VIRALLOAD");
+      if (
+        processedModifier !== "" &&
+        resultValue.toUpperCase() == "DETECTED" &&
+        isViralLoadTest
+      ) {
+        resultValue =
+          resultValue + " " + processedModifier + " " + minRange + " " + units;
+      }
       resultSegmentSectionResponse.push({
         sampleId: sampleId,
         hostTestCode: hostTestCode,
         resultTestCode: resultTestCode,
-        resultValue: cleanResultValue,
+        resultValue: resultValue,
         units: units,
         valueModifier: processedModifier,
         minRange: minRange,
