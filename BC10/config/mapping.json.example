@@ -1,4 +1,22 @@
 {
-    "MEASURE_NAME_FROM_MACHINE": "MAPPING_ID_FROM_IBLIS",
-    "ANOTHER_MEASURE_NAME_FROM_MACHINE": "ANOTHER_MAPPING_ID_FROM_IBLIS"
+  "WBC": "169",
+  "LYM#": "165",
+  "LYM%": "160",
+  "RBC": "147",
+  "HGB": "148",
+  "MCV": "150",
+  "MCH": "151",
+  "MCHC": "152",
+  "RDW-CV": "155",
+  "RDW-SD": "154",
+  "HCT": "149",
+  "PLT": "153",
+  "MPV": "157",
+  "PDW": "156",
+  "PCT": "158",
+  "MID#": "432",
+  "MID%": "433",
+  "GRAN#": "171",
+  "GRAN%": "173",
+  "PLCR": "176"
 }
