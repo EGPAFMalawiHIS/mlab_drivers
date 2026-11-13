@@ -1,8 +1,8 @@
 {
   "protocol": "http",
-  "host": "10.40.2.10",
-  "port": "8001",
-  "path": "/api/update_result.php",
+  "host": "192.168.100.200",
+  "port": "8005",
+  "path": "/api/v1/interfacer",
   "username": "username",
   "password": "password",
   "servicePort": "3110"

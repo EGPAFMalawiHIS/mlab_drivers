@@ -102,7 +102,7 @@ ls /dev/ttyUSB* /dev/ttyS*
 ```json
 {
   "protocol": "http",
-  "host": "10.43.68.222",
+  "host": "192.168.100.200",
   "port": "8005",
   "username": "username",
   "password": "password",

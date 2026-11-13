@@ -147,7 +147,10 @@ var server = net.createServer(function(socket) {
 	});
 });
 
-console.info("Server started at 1234, listening...");
-server.listen(1234, '10.41.84.3')
+var serverIp = settings.serverIp || '0.0.0.0';
+var serverPort = settings.serverPort || 1234;
+server.listen(serverPort, serverIp, function () {
+	console.info(`Server started at ${serverIp}:${serverPort}, listening...`);
+});
 
 

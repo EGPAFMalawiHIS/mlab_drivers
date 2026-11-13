@@ -34,12 +34,18 @@ cp config/xnseries.json.example config/xnseries.json
     npm install
     ```
 
-2. Edit the configuration as described in [Configuration](#configuration), including the listening address at the bottom of `xn1000.js`.
+2. Edit the configuration as described in [Configuration](#configuration).
 
 3. Start the service from inside the folder (the driver looks for `config` in the current folder):
 
     ```bash
     node xn1000.js
+    ```
+
+    When the service starts, you will see:
+
+    ```
+    Server started at 192.168.100.10:1234, listening...
     ```
 
 ## Upgrading a site that already runs this driver
@@ -59,28 +65,19 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 | File                     | Purpose                                                    |
 | ------------------------ | ---------------------------------------------------------- |
-| `config/settings.json`   | IBLIS connection details                                   |
+| `config/settings.json`   | IBLIS connection details and the address this service listens on |
 | `config/xnseries.json`   | Links each test name to its test ID in IBLIS               |
-| `xn1000.js` (last line)  | The address and port this service listens on              |
-
-### Listening address
-
-The address and port are set on the last line of `xn1000.js`:
-
-```js
-server.listen(1234, '10.40.2.10')
-```
-
-Change `10.40.2.10` to the IP address of the computer running this service, and `1234` to the port set on the XN-1000. On the XN-1000, set the host IP address and port to the same values.
 
 ### settings.json
 
 ```json
 {
-  "lisPath": "http://10.40.2.10:8001/api/update_result.php?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=sysmex-xn1000",
+  "lisPath": "http://192.168.100.200:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=sysmex-xn1000",
   "lisUser": "username",
   "lisPassword": "password",
-  "machineName": "sysmex-xn1000"
+  "machineName": "sysmex-xn1000",
+  "serverIp": "192.168.100.10",
+  "serverPort": "1234"
 }
 ```
 
@@ -90,6 +87,10 @@ Change `10.40.2.10` to the IP address of the computer running this service, and 
 | `lisUser`     | The username of the IBLIS API user.                                                                                                                                         |
 | `lisPassword` | The password of the IBLIS API user.                                                                                                                                         |
 | `machineName` | The machine name, for reference. The value used is the `machine_name` in `lisPath`.                                                                                         |
+| `serverIp`    | The IP address of the computer running this service. Leave it out, or use `0.0.0.0`, to listen on all network cards. |
+| `serverPort`  | The port this service listens on (default `1234`). It must be the same as the host port set on the XN-1000. |
+
+On the XN-1000, set the host IP address to the IP address of the computer running this service and the port to `serverPort`.
 
 ### xnseries.json
 
@@ -139,6 +140,6 @@ Then run the command that `pm2 startup` prints.
 
 ## Troubleshooting
 
-- **`Error: listen EADDRNOTAVAIL`:** the IP address in the last line of `xn1000.js` is not an address of this computer.
+- **`Error: listen EADDRNOTAVAIL`:** `serverIp` is not an address of this computer.
 - **Nothing in the log when a sample finishes:** check the XN-1000 host IP and port, and that the port is allowed in the firewall.
 - **A result does not reach IBLIS:** check that its name is in `xnseries.json` in capital letters, and check `lisPath`, `lisUser` and `lisPassword`.

@@ -1,6 +1,6 @@
 {
-  "baseURL": "http://10.43.180.10:8001/api/",
-  "path": "http://10.43.180.10:8001/api/update_result.php?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
+  "baseURL": "http://192.168.100.200:8005/api/v1/",
+  "path": "http://192.168.100.200:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
   "username": "username",
   "password": "password",
   "instrumentJSONMapping": "mapping.json",

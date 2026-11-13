@@ -76,7 +76,7 @@ nvm use 18
 
 ```json
 {
-  "baseURL": "http://127.0.0.1:8001/api/update_result.php",
+  "baseURL": "http://127.0.0.1:8005/api/v1/interfacer",
   "username": "username",
   "password": "password",
   "timeout": 5000,
@@ -86,7 +86,7 @@ nvm use 18
 
 | Key           | What to put                                                                                  |
 | ------------- | -------------------------------------------------------------------------------------------- |
-| `baseURL`     | The IBLIS result API URL. Replace `127.0.0.1:8001` with the IBLIS server address and port.   |
+| `baseURL`     | The IBLIS interfacer API URL. Replace `127.0.0.1:8005` with the IBLIS server address and port.   |
 | `username`    | The username of the IBLIS API user.                                                          |
 | `password`    | The password of the IBLIS API user.                                                          |
 | `timeout`     | How long to wait for IBLIS, in milliseconds.                                                 |

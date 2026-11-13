@@ -4,3 +4,4 @@ sample.txt
 
 # Local configuration files (copy from the .example files)
 config/settings.json
+config/DxH 560.json

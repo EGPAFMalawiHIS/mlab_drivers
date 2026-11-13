@@ -1,5 +1,5 @@
 {
-    "ipAddress" : "10.40.3.131",
+    "ipAddress" : "192.168.100.10",
     "port" : 1234,
     "machineName" : "Bechman Coulter DxH 560 Hematology Analyzer"
 }

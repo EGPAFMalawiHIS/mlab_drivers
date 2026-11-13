@@ -72,7 +72,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 ```json
 {
-  "iblsBaseURL": "http://127.0.0.1:8001/api/update_result.php",
+  "iblsBaseURL": "http://127.0.0.1:8005/api/v1/interfacer",
   "iblisUsername": "admin",
   "iblisPassword": "pass",
   "servicePort": "5050"
@@ -81,7 +81,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 | Key             | What to put                                                                                                  |
 | --------------- | ------------------------------------------------------------------------------------------------------------ |
-| `iblsBaseURL`   | The IBLIS result API URL. Replace `127.0.0.1:8001` with the IBLIS server address and port.                   |
+| `iblsBaseURL`   | The IBLIS interfacer API URL. Replace `127.0.0.1:8005` with the IBLIS server address and port.                   |
 | `iblisUsername` | The username of the IBLIS API user.                                                                          |
 | `iblisPassword` | The password of the IBLIS API user.                                                                          |
 | `servicePort`   | The port this service listens on. It must be the same as the LIS/host port set on the Chemray 120.           |

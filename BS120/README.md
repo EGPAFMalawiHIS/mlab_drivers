@@ -72,7 +72,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 {
   "targetFolder": "results",
   "deleteWhenDone": true,
-  "lisPath": "http://10.43.180.10:8001/api/update_result.php?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=Mindray+BS120",
+  "lisPath": "http://192.168.100.200:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=Mindray+BS120",
   "lisUser": "username",
   "lisPassword": "password",
   "instrumentJSONMapping": "mapping.json",

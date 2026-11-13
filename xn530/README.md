@@ -37,7 +37,7 @@ nvm use 18
 
     These files are ignored by git, so each site keeps its own copies and passwords are never committed.
 
-3. Edit the configuration as described in [Configuration](#configuration), including the listening address at the bottom of `xn530.js`.
+3. Edit the configuration as described in [Configuration](#configuration).
 
 4. Start the service from inside the folder (the driver looks for `config` in the current folder):
 
@@ -48,26 +48,15 @@ nvm use 18
     When the service starts, you will see:
 
     ```
-    Server started at 1234, listening...
+    Server started at 192.168.100.10:1234, listening...
     ```
 
 ## Configuration
 
 | File                    | Purpose                                         |
 | ----------------------- | ----------------------------------------------- |
-| `config/settings.json`  | IBLIS connection details                        |
+| `config/settings.json`  | IBLIS connection details and the address this service listens on |
 | `config/xnseries.json`  | Links each test name to its test ID in IBLIS    |
-| `xn530.js` (last line)  | The address and port this service listens on    |
-
-### Listening address
-
-The address and port are set on the last line of `xn530.js`:
-
-```js
-server.listen(1234, '10.41.84.3')
-```
-
-Change `10.41.84.3` to the IP address of the computer running this service, and `1234` to the port set on the analyzer. On the analyzer, set the host IP address and port to the same values.
 
 ### settings.json
 
@@ -76,7 +65,9 @@ Change `10.41.84.3` to the IP address of the computer running this service, and 
   "lisPath": "http://<iblis-server>:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=sysmex-xn530",
   "lisUser": "username",
   "lisPassword": "password",
-  "machineName": "sysmex-xn530"
+  "machineName": "sysmex-xn530",
+  "serverIp": "192.168.100.10",
+  "serverPort": "1234"
 }
 ```
 
@@ -86,6 +77,10 @@ Change `10.41.84.3` to the IP address of the computer running this service, and 
 | `lisUser`     | The username of the IBLIS API user.                                                                                                                                         |
 | `lisPassword` | The password of the IBLIS API user.                                                                                                                                         |
 | `machineName` | The machine name, for reference. The value used is the `machine_name` in `lisPath`.                                                                                         |
+| `serverIp`    | The IP address of the computer running this service. Leave it out, or use `0.0.0.0`, to listen on all network cards. |
+| `serverPort`  | The port this service listens on (default `1234`). It must be the same as the host port set on the analyzer. |
+
+On the analyzer, set the host IP address to the IP address of the computer running this service and the port to `serverPort`.
 
 ### xnseries.json
 
@@ -136,5 +131,5 @@ Then run the command that `pm2 startup` prints.
 ## Troubleshooting
 
 - **`Cannot find module '.../config/settings.json'`:** create the `config` folder as shown in [Installation](#installation), step 2.
-- **`Error: listen EADDRNOTAVAIL`:** the IP address in the last line of `xn530.js` is not an address of this computer.
+- **`Error: listen EADDRNOTAVAIL`:** `serverIp` is not an address of this computer.
 - **A result does not reach IBLIS:** check that its name is in `xnseries.json` in capital letters, and check `lisPath`, `lisUser` and `lisPassword`.

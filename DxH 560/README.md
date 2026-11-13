@@ -21,10 +21,11 @@ nvm use 18
 Before you start, create the configuration files from the examples. Run these commands from inside the `DxH 560` folder:
 
 ```bash
+cp "config/DxH 560.json.example" "config/DxH 560.json"
 cp config/settings.json.example config/settings.json
 ```
 
-`config/settings.json` are ignored by git, so each site keeps its own copies and passwords are never committed. Only the `.example` files are in the repository.
+`config/DxH 560.json` and `config/settings.json` are ignored by git, so each site keeps its own copies and passwords are never committed. Only the `.example` files are in the repository.
 
 1. Go into the driver folder and install the dependencies:
 
@@ -44,16 +45,16 @@ cp config/settings.json.example config/settings.json
     When the service starts, you will see:
 
     ```
-    Started server on 10.40.3.131
+    Started server on 192.168.100.10
     ```
 
 ## Upgrading a site that already runs this driver
 
-Earlier versions committed `config/settings.json` to git. Pulling this version removes them from the repository, so **back them up before you pull** and put them back afterwards:
+Earlier versions committed `config/DxH 560.json` and `config/settings.json` to git. Pulling this version removes them from the repository, so **back them up before you pull** and put them back afterwards:
 
 ```bash
 mkdir -p ~/DxH-560-config-backup
-cp config/settings.json ~/DxH-560-config-backup/
+cp "config/DxH 560.json" config/settings.json ~/DxH-560-config-backup/
 git pull
 cp ~/DxH-560-config-backup/* config/
 ```
@@ -73,7 +74,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 ```json
 {
-  "ipAddress": "10.40.3.131",
+  "ipAddress": "192.168.100.10",
   "port": 1234,
   "machineName": "Bechman Coulter DxH 560 Hematology Analyzer"
 }
@@ -90,9 +91,9 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 ```json
 {
   "protocol": "http",
-  "host": "10.40.2.10",
-  "port": "8001",
-  "path": "/api/update_result.php",
+  "host": "192.168.100.200",
+  "port": "8005",
+  "path": "/api/v1/interfacer",
   "username": "administrator",
   "password": "password",
   "servicePort": "3110"
@@ -104,7 +105,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 | `protocol`    | `http` or `https`, as used by the IBLIS server.              |
 | `host`        | The IBLIS server address.                                    |
 | `port`        | The IBLIS server port.                                       |
-| `path`        | The IBLIS result API path.                                   |
+| `path`        | The IBLIS interfacer API path.                                   |
 | `username`    | The username of the IBLIS API user.                          |
 | `password`    | The password of the IBLIS API user.                          |
 | `servicePort` | Not used by this driver. Leave it as it is.                  |

@@ -81,7 +81,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 ```json
 {
-  "lisPath": "http://192.168.100.200:8001/api/update_result.php?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
+  "lisPath": "http://192.168.100.200:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
   "lisUser": "admin",
   "lisPassword": "password",
   "instrumentJSONMapping": "mapping.json",
@@ -98,7 +98,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 | Key                     | What to put                                                                                                                                                  |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `lisPath`               | The IBLIS URL that results are sent to. Replace `192.168.100.200:8001` with the IBLIS server address and port. Keep `#{SPECIMEN_ID}`, `#{MEASURE_ID}` and `#{RESULT}` as they are. |
+| `lisPath`               | The IBLIS URL that results are sent to. Replace `192.168.100.200:8005` with the IBLIS server address and port. Keep `#{SPECIMEN_ID}`, `#{MEASURE_ID}` and `#{RESULT}` as they are. |
 | `lisUser`               | The username of the IBLIS API user.                                                                                                                          |
 | `lisPassword`           | The password of the IBLIS API user.                                                                                                                          |
 | `instrumentJSONMapping` | The name of the mapping file in the `config` folder. Leave it as `mapping.json`.                                                                             |

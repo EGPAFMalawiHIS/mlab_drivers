@@ -66,7 +66,7 @@ On Windows, copy the same files to another folder in File Explorer before pullin
 
 ```json
 {
-  "lisPath": "http://[IBLIS_IP_ADDRESS:PORT]/api/update_result.php?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
+  "lisPath": "http://[IBLIS_IP_ADDRESS:PORT]/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0",
   "lisUser": "[IBLIS_ADMIN_USERNAME]",
   "lisPassword": "[IBLIS_ADMIN_PASSWORD]",
   "outputDir": "./outputs"
