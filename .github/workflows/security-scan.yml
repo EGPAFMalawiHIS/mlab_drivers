@@ -1,0 +1,29 @@
+name: Security scan
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly, in case a compromised push slips past a branch without CI.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  malware-scan:
+    name: Scan drivers for obfuscated payloads
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Scan source files for injected malware
+        run: node .github/scripts/scan-malware.js
