@@ -1,0 +1,22 @@
+{
+  "Lactate Dehydrogenase": "455",
+  "Alanine Aminotransferase": "133",
+  "Aspartate Aminotransferase": "134",
+  "AST/ALT": 1347,
+  "Gamma-Glutamyltransferase": "136",
+  "Alkaline phosphatase": "309",
+  "Total Protein": "141",
+  "Total Cholesterol": "146",
+  "Bilirubin Total (DSA Method)": "137",
+  "Bilirubin Direct (DSA Method)": "138",
+  "Bilirubin Total (VOX Method)": "428",
+  "Bilirubin Direct (VOX Method)": "429",
+  "Albumin": "140",
+  "Creatinine (Sarcosine Oxidase Method)": "143",
+  "Urea": "142",
+  "Triglycerides": "145",
+  "Uric Acid": "434",
+  "Glo": "144",
+  "HDL-C": "237",
+  "LDL-C": "238"
+}

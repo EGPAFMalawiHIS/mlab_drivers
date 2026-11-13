@@ -1,0 +1,7 @@
+{
+        "iblsBaseURL": "http://127.0.0.1:8005/api/v1/interfacer?machine_name=MainLab-Mindray-BS240",
+        "iblisUsername": "user",
+        "iblisPassword": "pass",
+        "machineServicePort": "3040",
+        "machineName": "Mindray-BS240"
+}

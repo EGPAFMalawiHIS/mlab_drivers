@@ -1,0 +1,31 @@
+{
+  "name": "bs240",
+  "version": "1.0.0",
+  "description": "Mindray BS240 machine driver service for processing data from bs240 and sending results to IBLIS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EGPAFMalawiHIS/mlab_drivers.git",
+    "directory": "BS240"
+  },
+  "keywords": [
+    "Mindray",
+    "BS240",
+    "HL7",
+    "LIS"
+  ],
+  "author": "Hopson Gausi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EGPAFMalawiHIS/mlab_drivers/issues"
+  },
+  "homepage": "https://github.com/EGPAFMalawiHIS/mlab_drivers/tree/main/BS240#readme",
+  "dependencies": {
+    "@egpafmalawi/machine-driver-utility": "^1.0.2-2",
+    "path": "^0.12.7",
+    "simple-hl7": "^3.2.4"
+  }
+}
