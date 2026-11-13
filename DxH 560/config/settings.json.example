@@ -1,0 +1,9 @@
+{
+  "protocol": "http",
+  "host": "10.40.2.10",
+  "port": "8001",
+  "path": "/api/update_result.php",
+  "username": "username",
+  "password": "password",
+  "servicePort": "3110"
+}

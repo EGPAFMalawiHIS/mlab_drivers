@@ -1,3 +1,7 @@
 node_modules
 package-lock.json
 sample.txt
+
+# Local configuration files (copy from ../xn1000/config/*.example)
+config/settings.json
+config/xnseries.json

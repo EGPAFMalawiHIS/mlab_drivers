@@ -1,75 +1,67 @@
-# BIOBASE BK200 Hematology Analyzer Driver
+# BIOBASE-BK200
 
-Machine driver for interfacing BIOBASE BK200 hematology analyzer with IBLIS for automatic results upload using HL7 protocol.
-
-## Features
-
-- HL7 v2.3.1 protocol support
-- TCP/IP communication
-- Automatic message acknowledgment (ACK/NACK)
-- Erro├── config/
-    ├── settings.json           # IBLIS connection settings
-    ├── mapping.json           # IBLIS measure ID mapping
-    └── parameters.json        # Parameter name translation
-```
-
-### Adding New Parameters
-1. Add parameter mapping to `config/parameters.json`
-2. Add corresponding IBLIS measure ID to `config/mapping.json`
-3. Test with machine to ensure proper HL7 parsing
-
-### Testing
-1. Use HL7 simulator to test driver functionality
-2. Monitor console output for proper message handling
-3. Verify data reaches IBLIS correctly
-4. Test with actual BK200 machine HL7 messagestry mechanisms
-- Configurable through settings.json
-- Comprehensive logging
-- IBLIS integration
-- Real-time result processing
+Machine driver for interfacing the BIOBASE BK200 hematology analyzer with IBLIS. The driver listens for HL7 (v2.3.1) messages from the machine over TCP/IP and uploads the results to IBLIS automatically.
 
 ## Requirements
 
-- Node.js (version 14+ recommended)
-- Network connection between BK200 machine and host computer
-- Access to IBLIS server
+- Node.js **v18**
+- npm
+- Network connection between the computer running this service and the BK200
+- Access to the IBLIS system (API username and password, and the test IDs)
 
-## Dependencies
+If you use nvm:
 
-The driver uses the following key dependencies:
-- `simple-hl7`: For HL7 message parsing and handling
-- `node-rest-client`: For HTTP communication with IBLIS
-- `path`: For file path operations
+```bash
+nvm install 18
+nvm use 18
+```
 
 ## Installation
 
-1. Navigate to the BIOBASE-BK200 directory:
-```bash
-cd BIOBASE-BK200
-```
+1. Go into the BIOBASE-BK200 folder and install the dependencies:
 
-2. Install dependencies:
-```bash
-npm install
-```
+    ```bash
+    cd BIOBASE-BK200
+    npm install
+    ```
+
+2. Create the configuration files from the examples:
+
+    ```bash
+    cp config/settings.json.example config/settings.json
+    cp config/mapping.json.example config/mapping.json
+    ```
+
+3. Edit `config/settings.json`, `config/mapping.json` and, if needed, `config/parameters.json` as described in [Configuration](#configuration).
+
+4. Start the service:
+
+    ```bash
+    node app.js
+    ```
+
+    When the service starts, you will see:
+
+    ```
+    ========= BIOBASE BK200 HL7 SERVICE STARTED ON PORT 5500 =========
+    ```
+
+`config/settings.json` and `config/mapping.json` are ignored by git, so passwords and site-specific IDs are never committed.
 
 ## Configuration
 
-### 1. Configure IBLIS Connection
+| File                     | Created from                   | Purpose                                                                     |
+| ------------------------ | ------------------------------ | --------------------------------------------------------------------------- |
+| `config/settings.json`   | `config/settings.json.example` | IBLIS connection details and the port the service listens on               |
+| `config/parameters.json` | (in the repository)            | Translates each test name sent by the machine to a standard parameter name |
+| `config/mapping.json`    | `config/mapping.json.example`  | Links each standard parameter name to its test ID in IBLIS                  |
 
-Copy the example configuration and edit with your IBLIS server details:
-
-```bash
-cp config/settings.json.example config/settings.json
-cp config/mapping.json.example config/mapping.json
-```
-
-Edit `config/settings.json`:
+### settings.json
 
 ```json
 {
-  "port": 9201,
-  "host": "192.168.1.195",
+  "port": 5500,
+  "host": "0.0.0.0",
   "lisPath": "http://127.0.0.1:8005/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=#{MACHINE_NAME}",
   "lisUser": "username",
   "lisPassword": "password",
@@ -82,256 +74,83 @@ Edit `config/settings.json`:
 }
 ```
 
-### 2. Parameter Mapping
+| Key           | What to put                                                                                                                                                                 |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `port`        | The port this service listens on. It must be the same as the LIS/host port set on the BK200.                                                                                |
+| `lisPath`     | The IBLIS URL that results are sent to. Replace `127.0.0.1:8005` with the IBLIS server address and port. Keep the `#{...}` placeholders exactly as they are; the driver fills them in. |
+| `lisUser`     | The username of the IBLIS API user.                                                                                                                                         |
+| `lisPassword` | The password of the IBLIS API user.                                                                                                                                         |
+| `machineName` | The machine name sent to IBLIS in place of `#{MACHINE_NAME}`. It must be the same as the instrument name in IBLIS.                                                          |
 
-Edit `config/mapping.json` with your IBLIS measure IDs:
+The other keys (`host`, `timeout`, `socketTimeout`, `maxConnections`, `retryAttempts`, `retryDelay`) can be left at their defaults.
 
-```json
-{
-  "WBC": "169",
-  "RBC": "147",
-  "HGB": "151",
-  "HCT": "149",
-  "MCV": "161",
-  "MCH": "159",
-  "MCHC": "162",
-  "PLT": "142",
-  "LYMPH": "154",
-  "LYMPH%": "155",
-  "LYMPH#": "156",
-  "MONO": "157",
-  "MONO%": "158",
-  "MONO#": "160",
-  "NEUT": "163",
-  "NEUT%": "164",
-  "NEUT#": "165",
-  "EOS": "166",
-  "EOS%": "167",
-  "EOS#": "168",
-  "BASO": "170",
-  "BASO%": "171",
-  "BASO#": "172",
-  "RDW-CV": "148",
-  "RDW-SD": "173",
-  "PDW": "174",
-  "MPV": "175",
-  "P-LCR": "176",
-  "PCT": "177"
-}
-```
+On the BK200, set the LIS/host IP address to the IP address of the computer running this service, and set the port to `port`.
 
-### 3. Parameter Translation
+### parameters.json and mapping.json
 
-The `config/parameters.json` file contains the mapping between BK200 parameter names and standardized names. This handles variations in parameter naming from the machine.
+Each result goes through two lookups:
 
-## Machine Setup
+1. `parameters.json` translates the test name the machine sends into a standard parameter name. For example, the machine may send `LYM%`, which becomes `LYMPH%`:
 
-1. Configure the BK200 machine to send data via TCP/IP using HL7 protocol
-2. Set the host IP to the computer running this driver
-3. Set the port to match `port` in settings.json (default: 9201)
-4. Configure HL7 protocol communication
-5. Enable automatic result transmission
-6. Ensure machine sends HL7 v2.3.1 formatted messages
+    ```json
+    { "LYM%": "LYMPH%" }
+    ```
 
-## Running the Driver
+2. `mapping.json` links that standard name to the test's ID in IBLIS:
 
-### Development/Testing
-```bash
-npm start
-```
+    ```json
+    { "LYMPH%": "155" }
+    ```
 
-or
+**The name on the left of `parameters.json`** must be exactly the same as the test name the machine sends. To find the exact names:
+
+1. Start the service and run a sample on the BK200.
+2. Look at the service log. For each result you will see:
+
+    ```
+    Test Name: "LYM%"
+    ✓ Test: LYM% → LYMPH% → Measure ID: 155
+    ```
+
+    The value in `Test Name: "..."` is the exact name from the machine.
+3. If you see `✗ No mapping found for test: "<name>"`, add `<name>` to `parameters.json`, and add its standard name with the IBLIS ID to `mapping.json`.
+
+**The ID (right side of `mapping.json`)** must be the ID of that test in the IBLIS system.
+
+Restart the service after changing any configuration file.
+
+### Firewall (ufw)
+
+If ufw is enabled, allow the service port so the machine can connect:
 
 ```bash
-node app.js
+sudo ufw allow 5500/tcp
 ```
 
-### Development with auto-restart
-```bash
-npm run dev
-```
+Replace `5500` with your `port` if you changed it.
 
-### Production (with PM2)
+## Running with PM2 (recommended)
+
 ```bash
-# Install PM2 globally
 npm install -g pm2
-
-# Start the driver
-pm2 start app.js --name "biobase-bk200-driver"
-
-# Save PM2 configuration
+pm2 start app.js --name "bk200-driver"
 pm2 save
-
-# Setup auto-start on boot
 pm2 startup
 ```
 
-## HL7 Protocol Implementation
+Then run the command that `pm2 startup` prints.
 
-This driver implements the HL7 v2.3.1 standard for laboratory data communication with the following features:
+Useful commands:
 
-### Protocol Flow
-1. **Connection** - Machine establishes TCP connection
-2. **HL7 Message** - Machine sends formatted HL7 message with results
-3. **ACK** - Driver sends acknowledgment for successful processing
-4. **NACK** - Driver sends negative acknowledgment for errors
-5. **Disconnect** - Connection closes after processing
-
-### Message Types
-- **MSH**: Message Header - Contains message control information
-- **PID**: Patient Identification - Patient demographic information
-- **PV1**: Patient Visit - Visit information
-- **OBR**: Observation Request - Order information with sample ID
-- **OBX**: Observation Result - Individual test results with values, units, and reference ranges
-
-### Message Structure
+```bash
+pm2 logs bk200-driver      # view the log (used to get test names)
+pm2 restart bk200-driver   # restart after changing configuration
 ```
-MSH|^~\&|AC 610|Hematology Analyzer|||timestamp||ORU^R01|message_id|P|2.3.1
-PID|1||sample_id^^^^||||||
-PV1|1|Outpatient ID||||||||||||||||||Own expense
-OBR|1||order_id|test_battery||timestamp||||||||||||||||
-OBX|seq|data_type|test_code^test_name^coding_system||result_value|units|reference_range|flags|||status||
-```
-
-### Key HL7 Fields Processed
-- **Sample ID**: Extracted from PID-3 or OBR-3
-- **Test Name**: Extracted from OBX-3 (observation identifier)
-- **Result Value**: Extracted from OBX-5 (observation value)
-- **Units**: Extracted from OBX-6 (units)
-- **Reference Range**: Extracted from OBX-7 (reference range)
-
-## Supported Parameters
-
-The driver processes the following hematology parameters:
-
-### Complete Blood Count (CBC)
-- WBC (White Blood Cells)
-- RBC (Red Blood Cells)
-- HGB (Hemoglobin)
-- HCT (Hematocrit)
-- MCV (Mean Corpuscular Volume)
-- MCH (Mean Corpuscular Hemoglobin)
-- MCHC (Mean Corpuscular Hemoglobin Concentration)
-- PLT (Platelets)
-
-### Differential Count
-- LYMPH%, LYMPH# (Lymphocytes) - LYM%, LYM#
-- MONO%, MONO# (Monocytes) - MON%, MON#
-- NEUT%, NEUT# (Neutrophils) - NEU%, NEU#
-- EOS%, EOS# (Eosinophils)
-- BASO%, BASO# (Basophils) - BAS%, BAS#
-
-### Red Blood Cell Indices
-- RDW-CV, RDW-SD (Red Cell Distribution Width)
-
-### Platelet Indices
-- PDW (Platelet Distribution Width)
-- MPV (Mean Platelet Volume)
-- P-LCR (Platelet Large Cell Ratio)
-- PCT (Plateletcrit)
-- PLCC (Platelet Large Cell Count)
-
-### Special Parameters
-- ALY%, ALY# (Atypical Lymphocytes)
-- LIC%, LIC# (Large Immature Cells)
-
-## Data Flow
-
-1. BK200 sends HL7 v2.3.1 formatted messages via TCP/IP
-2. Driver receives and parses HL7 message using simple-hl7 library
-3. Driver extracts data from HL7 segments:
-   - Sample ID from PID or OBR segments
-   - Test results from OBX segments (test name, value, units, reference range)
-4. Driver maps machine parameter names to IBLIS measure IDs using configuration files
-5. Driver validates results (skips invalid values like "---")
-6. Driver sends valid results to IBLIS via HTTP API
-7. Driver sends ACK response to machine for successful processing
-
-## Error Handling
-
-The driver includes comprehensive error handling:
-- Automatic ACK/NACK responses to HL7 messages
-- Invalid message parsing error recovery
-- Network error recovery with retry mechanisms
-- IBLIS communication error handling with retry logic
-- Socket timeout management
-- Graceful shutdown handling
-- Detailed error logging for troubleshooting
-
-## Logging
-
-Monitor the console output for:
-- Server startup confirmation
-- Incoming HL7 messages from BK200
-- Message parsing results (sample ID, test names, values)
-- Parameter mapping status
-- Data transmission status to IBLIS
-- Error messages and warnings
-- ACK/NACK responses sent to machine
 
 ## Troubleshooting
 
-### Connection Issues
-1. Verify `port` in settings.json matches machine configuration
-2. Check network connectivity between BK200 and driver host
-3. Ensure firewall allows connections on configured port
-
-### Authentication Errors
-1. Check `lisUser` and `lisPassword` credentials in settings.json
-2. Verify IBLIS server is accessible
-3. Test IBLIS endpoint manually
-
-### Missing Results
-1. Ensure parameter mapping in `mapping.json` is correct for your IBLIS installation
-2. Check that parameter names in `parameters.json` match BK200 HL7 output
-3. Verify machine is configured to send all required parameters
-4. Check for "---" values which indicate invalid/missing results from machine
-
-### HL7 Communication Issues
-1. Check machine HL7 protocol settings
-2. Verify HL7 version is set to 2.3.1
-3. Ensure machine is configured for TCP/IP communication
-4. Verify message format matches expected HL7 structure
-
-## Development
-
-### File Structure
-```
-BIOBASE-BK200/
-├── app.js                 # Main driver application
-├── package.json           # Node.js dependencies and scripts
-├── README.md             # This documentation
-└── config/
-    ├── settings.json.example    # Example configuration
-    ├── settings.json           # IBLIS connection settings
-    ├── mapping.json.example    # Example parameter mapping
-    ├── mapping.json           # IBLIS measure ID mapping
-    └── parameters.json        # Parameter name translation
-```
-
-### Adding New Parameters
-1. Add parameter mapping to `config/parameters.json`
-2. Add corresponding IBLIS measure ID to `config/mapping.json`
-3. Test with machine to ensure proper parsing
-
-### Testing
-1. Use ASTM simulator to test driver functionality
-2. Monitor console output for proper message handling
-3. Verify data reaches IBLIS correctly
-
-## License
-
-This project is licensed under the ISC License.
-
-## Support
-
-For support and questions:
-- Check the troubleshooting section above
-- Review console logs for error messages
-- Verify configuration files are correct
-- Test network connectivity
-
-## Version History
-
-- v2.0.0 - Updated to HL7 v2.3.1 protocol implementation with enhanced parameter support
-- v1.0.0 - Initial release with ASTM ACK protocol support (deprecated)
+- **`Cannot find module '.../config/settings.json'`:** copy the `.example` files as shown in [Installation](#installation), step 2.
+- **`HL7 CONNECTION ESTABLISHED` never appears:** check that the BK200 LIS/host IP and port match this computer's IP and `port`, and that the port is allowed in the firewall.
+- **`Sample ID not found in HL7 message`:** the sample was run without an ID. Enter the IBLIS accession number as the sample ID on the machine.
+- **`✗ No mapping found for test`:** see [parameters.json and mapping.json](#parametersjson-and-mappingjson).
+- **`Warning: Response status ...` or no results in IBLIS:** check `lisPath`, `lisUser`, `lisPassword` and the IDs in `mapping.json`.

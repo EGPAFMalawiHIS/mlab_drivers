@@ -3,3 +3,6 @@ package-lock.json
 .zip
 outputs
 config/settings.json
+
+# Local configuration files (copy from the .example files)
+config/mapping.json

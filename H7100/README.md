@@ -1,109 +1,150 @@
-# H7100 Hematology Analyzer Driver
+# H7100
 
-This is a Node.js driver for Erba H7100 Hematology Analyzer that communicates using the HL7 protocol over TCP/IP.
+Machine driver for interfacing the Erba H7100 hematology analyzer with IBLIS. The driver listens for HL7 messages from the machine over TCP/IP and uploads the results to IBLIS automatically.
 
-## Features
+## Requirements
 
-- HL7 protocol support
-- TCP/IP communication on port 5000
-- Automatic message acknowledgment
-- Error handling and retry mechanisms
-- Configurable through settings.json
-- Comprehensive logging
-- IBLIS integration
+- Node.js **v18**
+- npm
+- Network connection between the computer running this service and the H7100
+- Access to the IBLIS system (API username and password, and the test IDs)
+
+If you use nvm:
+
+```bash
+nvm install 18
+nvm use 18
+```
 
 ## Installation
 
-```bash
-npm install
-```
+1. Go into the H7100 folder and install the dependencies:
+
+    ```bash
+    cd H7100
+    npm install
+    ```
+
+2. Create the configuration files from the examples:
+
+    ```bash
+    cp config/settings.json.example config/settings.json
+    cp config/mapping.json.example config/mapping.json
+    ```
+
+3. Edit `config/settings.json` and `config/mapping.json` as described in [Configuration](#configuration).
+
+4. Start the service from inside the H7100 folder:
+
+    ```bash
+    npm start
+    ```
+
+    When the service starts, you will see:
+
+    ```
+    Server listening on 0.0.0.0:5000
+    H7100 Driver started successfully
+    ```
+
+`config/settings.json` and `config/mapping.json` are ignored by git, so passwords and site-specific IDs are never committed.
 
 ## Configuration
 
-1. Copy the example configuration files:
-```bash
-cp config/settings.json.example config/settings.json
-cp config/mapping.json.example config/mapping.json
-```
+| File                   | Created from                   | Purpose                                                          |
+| ---------------------- | ------------------------------ | ---------------------------------------------------------------- |
+| `config/settings.json` | `config/settings.json.example` | IBLIS connection details and the port the service listens on    |
+| `config/mapping.json`  | `config/mapping.json.example`  | Links each test name sent by the machine to its test ID in IBLIS |
 
-2. Edit `config/settings.json` with your specific settings:
-- `port`: TCP port number (default: 5000)
-- `host`: Host address to bind to (default: 0.0.0.0)
-- `lisPath`: IBLIS API endpoint URL
-- `lisUser`: IBLIS username
-- `lisPassword`: IBLIS password
-- `logLevel`: Logging level (default: info)
-- `retryInterval`: Milliseconds between retry attempts (default: 5000)
-- `maxRetries`: Maximum number of retry attempts (default: 5)
+### settings.json
 
-3. Edit `config/mapping.json` with your IBLIS measure IDs:
-Replace each `[IBLIS_MEASURE_ID]` with the corresponding IBLIS measure ID for each test parameter. For example:
 ```json
 {
-    "WBC": "169",
-    "RBC": "147",
-    ...
+  "port": 5000,
+  "host": "0.0.0.0",
+  "lisPath": "http://[IBLIS_IP_ADDRESS]:[PORT]/api/v1/interfacer?specimen_id=#{SPECIMEN_ID}&measure_id=#{MEASURE_ID}&result=#{RESULT}&dec=0&machine_name=Erba-H7100",
+  "lisUser": "[IBLIS_USERNAME]",
+  "lisPassword": "[IBLIS_PASSWORD]",
+  "instrumentJSONMapping": "mapping.json",
+  "logLevel": "info",
+  "retryInterval": 5000,
+  "maxRetries": 5
 }
 ```
 
-## IBLIS Integration
+| Key           | What to put                                                                                                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `port`        | The port this service listens on. It must be the same as the LIS/host port set on the H7100.                                                                                      |
+| `host`        | The address to listen on. Leave it as `0.0.0.0` to accept connections on all network cards.                                                                                       |
+| `lisPath`     | The IBLIS URL that results are sent to. Replace `[IBLIS_IP_ADDRESS]:[PORT]` with the IBLIS server address and port. Keep `#{SPECIMEN_ID}`, `#{MEASURE_ID}` and `#{RESULT}` as they are. The `machine_name` value must be the instrument name in IBLIS. |
+| `lisUser`     | The username of the IBLIS API user.                                                                                                                                               |
+| `lisPassword` | The password of the IBLIS API user.                                                                                                                                               |
+| `logLevel`    | How much to log: `info` (default), `debug`, `warn` or `error`.                                                                                                                    |
 
-The driver is configured to send results to IBLIS using the interfacer API. The test codes are mapped to IBLIS measure IDs in `config/mapping.json`. Make sure to:
-1. Configure the correct IBLIS endpoint in settings.json
-2. Set up proper authentication credentials
-3. Map all test codes to their corresponding IBLIS measure IDs
+On the H7100, set the LIS/host IP address to the IP address of the computer running this service, and set the port to `port`.
 
-## Usage
+### mapping.json
 
-```javascript
-const h7100Driver = require('./src/index');
+Each entry has this form:
 
-// The driver will automatically start and listen for connections
-```
-
-## Result Format
-
-The driver returns results in the following format:
-
-```javascript
+```json
 {
-    patientId: string,
-    results: [
-        {
-            testCode: string,
-            value: string,
-            units: string,
-            referenceRange: string,
-            flags: string
-        }
-    ]
+  "<test name exactly as sent by the machine>": "<test ID from IBLIS>"
 }
 ```
 
-## Logging
+Replace every `[IBLIS_MEASURE_ID]` in the example with the test's ID in IBLIS, for example `"WBC": "169"`.
 
-Logs are written to:
-- Console (all levels)
-- h7100.log (all levels)
-- h7100-error.log (error level only)
+**The name (left side)** must be exactly the same as the test name the machine sends, including capital letters and symbols such as `#` and `%`. To find the exact names:
 
-## Error Handling
+1. Start the service and run a sample on the H7100.
+2. Look at the service log. Each result is printed like this:
 
-The driver includes comprehensive error handling:
-- Automatic retry on connection failures
-- Invalid message handling
-- HL7 parsing error handling
-- Socket error management
+    ```
+    results:  { name: 'WBC', result: '6.5', id: '169' }
+    ```
 
-## Development
+3. The value after `name:` is the test name from the machine. Copy it exactly as the name in `mapping.json`.
+4. If `id` is `''` (empty), that name is missing from `mapping.json` or spelled differently.
 
-When developing or deploying:
-1. Use settings.json.example and mapping.json.example as templates
-2. Create your own settings.json and mapping.json with actual values
-3. Never commit settings.json or mapping.json (they're in .gitignore)
-4. Keep mapping.json updated with correct IBLIS measure IDs for your installation
-5. Document any new test codes added to mapping.json
+**The ID (right side)** must be the ID of that test in the IBLIS system.
+
+Restart the service after changing `settings.json` or `mapping.json`.
+
+### Firewall (ufw)
+
+If ufw is enabled, allow the service port so the machine can connect:
+
+```bash
+sudo ufw allow 5000/tcp
+```
+
+Replace `5000` with your `port` if you changed it.
+
+## Running with PM2 (recommended)
+
+Start it from inside the H7100 folder, so the log files are written there:
+
+```bash
+npm install -g pm2
+pm2 start src/index.js --name "h7100-driver"
+pm2 save
+pm2 startup
+```
+
+Then run the command that `pm2 startup` prints.
+
+## Logs
+
+Logs are written to the console, to `h7100.log` (all levels) and to `h7100-error.log` (errors only), in the H7100 folder.
+
+## Troubleshooting
+
+- **`Cannot find module '../../config/settings.json'`:** copy the `.example` files as shown in [Installation](#installation), step 2.
+- **`New message received` never appears:** check that the H7100 LIS/host IP and port match this computer's IP and `port`, and that the port is allowed in the firewall.
+- **`id: ''` in the log:** the test name is missing from `mapping.json` or does not match exactly.
+- **`No valid results to send to IBLIS` or no results in IBLIS:** check `lisPath`, `lisUser`, `lisPassword` and the IDs in `mapping.json`.
 
 ## License
 
-This project is licensed under the MIT License.
+MIT. See the `LICENSE` file in the repository root.

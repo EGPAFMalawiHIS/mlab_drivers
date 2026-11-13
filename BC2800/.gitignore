@@ -1,1 +1,5 @@
 node_modules
+
+# Local configuration files (copy from the .example files)
+config.json
+kx21n.json

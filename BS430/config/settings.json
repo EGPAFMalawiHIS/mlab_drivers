@@ -1,6 +1,0 @@
-{
-	"iblsBaseURL": "http://127.0.0.1:8005/api/v1/interfacer",
-	"iblisUsername": "admin",
-	"iblisPassword": "pass",
-	"bs430ServicePort": "3020"
-}

@@ -1,0 +1,8 @@
+{
+  "protocol": "http",
+  "IblisIpAddress": "127.0.0.1",
+  "port": "8005",
+  "path": "/api/v1/interfacer",
+  "username": "username",
+  "password": "password"
+}

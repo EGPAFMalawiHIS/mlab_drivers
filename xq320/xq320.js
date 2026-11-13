@@ -147,6 +147,6 @@ var server = net.createServer(function(socket) {
 });
 
 console.info(`Server started at ${settings.serverIp}:${settings.serverPort}, listening...`);
-server.listen(settings.severPort, settings.severIp)
+server.listen(settings.serverPort, settings.serverIp)
 
 

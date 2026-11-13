@@ -1,0 +1,5 @@
+node_modules/
+
+# Local configuration files (copy from the .example files)
+config/settings.json
+config/mapping.json

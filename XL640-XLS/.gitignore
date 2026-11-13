@@ -4,3 +4,7 @@ sample.txt
 config/iblis.json
 config/network.json
 
+
+# Local configuration files (copy from the .example files)
+config/settings.json
+config/mapping.json

@@ -106,3 +106,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Local configuration files (copy from the .example files)
+config/settings.json
+config/mapping.json
