@@ -90,6 +90,26 @@ The service reads two files from the `config` folder:
 
 On the BS240 machine, set the LIS/host IP address to the IP address of the computer running this service, and set the port to `machineServicePort`.
 
+### Firewall (ufw)
+
+If ufw is enabled on the computer running this service, allow the port set in `machineServicePort` so the BS240 machine can connect. For the default port `3040`:
+
+```bash
+sudo ufw allow 3040/tcp
+```
+
+If you changed `machineServicePort`, replace `3040` with your port. Check that the rule was added:
+
+```bash
+sudo ufw status
+```
+
+To allow connections only from the BS240 machine, use its IP address instead (replace `192.168.1.50` with the machine's IP):
+
+```bash
+sudo ufw allow from 192.168.1.50 to any port 3040 proto tcp
+```
+
 ### mapping.json
 
 Each entry in `mapping.json` has this form:
@@ -172,7 +192,7 @@ pm2 status                 # check that the service is running
 ## Troubleshooting
 
 - **`Cannot find module '.../config/settings'` or `'.../config/mapping'`:** the configuration files have not been created. Copy the `.example` files as shown in [Installation](#installation), step 3.
-- **The connection message never appears in the log:** check that the BS240 LIS/host IP and port match this computer's IP and `machineServicePort`, and that no firewall is blocking the port.
+- **The connection message never appears in the log:** check that the BS240 LIS/host IP and port match this computer's IP and `machineServicePort`, and that the port is allowed in the firewall (see [Firewall (ufw)](#firewall-ufw)).
 - **A result shows `undefined` in the log and does not reach IBLIS:** the test name is missing from `mapping.json` or does not match exactly. See [mapping.json](#mappingjson).
 - **Results are sent but rejected by IBLIS:** check `iblsBaseURL`, `iblisUsername`, `iblisPassword` and the IBLIS IDs in `mapping.json`.
 - **Results of `-268435455` are skipped:** this is expected. The machine sends this value when it has no result for a test.
